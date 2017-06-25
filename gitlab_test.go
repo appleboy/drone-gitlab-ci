@@ -22,7 +22,7 @@ func TestBuildURL(t *testing.T) {
 
 func TestUnSupportProtocol(t *testing.T) {
 	ci := &Gitlab{
-		Host: "https://gitlab.com",
+		Host: "https://foo.bar",
 	}
 
 	params := url.Values{
@@ -31,5 +31,5 @@ func TestUnSupportProtocol(t *testing.T) {
 	}
 
 	err := ci.trigger("1234", params, nil)
-	assert.Nil(t, err)
+	assert.NotNil(t, err)
 }
