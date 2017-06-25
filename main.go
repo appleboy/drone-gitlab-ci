@@ -26,7 +26,7 @@ func main() {
 	app.Version = Version
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
-			Name:   "host,h",
+			Name:   "host,l",
 			Usage:  "gitlab-ci base url",
 			EnvVar: "PLUGIN_HOST,GITLBA_HOST",
 			Value:  "https://gitlab.com",
