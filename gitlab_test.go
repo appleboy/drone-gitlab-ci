@@ -1,26 +1,35 @@
 package main
 
 import (
-// "net/url"
-// "testing"
+	"net/url"
+	"testing"
 
-// "github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
 )
 
-// func TestUnSupportProtocol(t *testing.T) {
-// }
+func TestBuildURL(t *testing.T) {
+	ci := &Gitlab{
+		Host: "https://gitlab.com",
+	}
 
-// func TestUnSupportProtocol(t *testing.T) {
-// 	jenkins := NewGitlab("http://example.com")
-// 	para
+	params := url.Values{
+		"token": []string{"foo"},
+		"ref":   []string{"bar"},
+	}
 
-// 	err := jenkins.trigger("drone-jenkins", nil)
-// 	assert.NotNil(t, err)
-// }
+	assert.Equal(t, "https://gitlab.com/api/v4/projects/1234/trigger/pipeline?ref=bar&token=foo", ci.buildURL("1234", params))
+}
 
-// func TestTriggerBuild(t *testing.T) {
-// 	jenkins := NewJenkins("http://example.com")
+func TestUnSupportProtocol(t *testing.T) {
+	ci := &Gitlab{
+		Host: "https://gitlab.com",
+	}
 
-// 	err := jenkins.trigger("drone-jenkins", url.Values{"token": []string{"bar"}})
-// 	assert.Nil(t, err)
-// }
+	params := url.Values{
+		"token": []string{"foo"},
+		"ref":   []string{"bar"},
+	}
+
+	err := ci.trigger("1234", params, nil)
+	assert.Nil(t, err)
+}
