@@ -20,7 +20,7 @@ func TestBuildURL(t *testing.T) {
 	assert.Equal(t, "https://gitlab.com/api/v4/projects/1234/trigger/pipeline?ref=bar&token=foo", ci.buildURL("1234", params))
 }
 
-func TestUnSupportProtocol(t *testing.T) {
+func TestHostNotFound(t *testing.T) {
 	ci := &Gitlab{
 		Host: "https://foo.bar",
 	}
@@ -32,6 +32,20 @@ func TestUnSupportProtocol(t *testing.T) {
 
 	err := ci.trigger("1234", params, nil)
 	assert.NotNil(t, err)
+}
+
+func TestNilBody(t *testing.T) {
+	ci := &Gitlab{
+		Host: "https://gitlab.com",
+	}
+
+	params := url.Values{
+		"token": []string{"foo"},
+		"ref":   []string{"bar"},
+	}
+
+	err := ci.trigger("1234", params, nil)
+	assert.Nil(t, err)
 }
 
 func TestResponse404Body(t *testing.T) {
