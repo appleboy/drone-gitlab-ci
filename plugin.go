@@ -14,6 +14,14 @@ type (
 		Ref   string
 		ID    string
 	}
+
+	// Commit struct
+	Commit struct {
+		ID     int64  `json:"id"`
+		Sha    string `json:"sha"`
+		Ref    string `json:"ref"`
+		Status string `json:"status"`
+	}
 )
 
 // Exec executes the plugin.
@@ -32,5 +40,19 @@ func (p Plugin) Exec() error {
 		"ref":   []string{p.Ref},
 	}
 
-	return ci.trigger(p.ID, params, nil)
+	body := &Commit{}
+
+	err := ci.trigger(p.ID, params, body)
+
+	if err != nil {
+		log.Println("gitlab-ci error:", err.Error())
+		return err
+	}
+
+	log.Println("build id:", body.ID)
+	log.Println("build sha:", body.Sha)
+	log.Println("build ref:", body.Ref)
+	log.Println("build status:", body.Status)
+
+	return nil
 }

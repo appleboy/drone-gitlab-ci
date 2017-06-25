@@ -33,3 +33,23 @@ func TestUnSupportProtocol(t *testing.T) {
 	err := ci.trigger("1234", params, nil)
 	assert.NotNil(t, err)
 }
+
+func TestResponse404Body(t *testing.T) {
+	type body struct {
+		Message string `json:"message"`
+	}
+
+	ci := &Gitlab{
+		Host: "https://gitlab.com",
+	}
+
+	params := url.Values{
+		"token": []string{"foo"},
+		"ref":   []string{"bar"},
+	}
+
+	resp := &body{}
+	err := ci.trigger("1234", params, resp)
+	assert.Equal(t, "404 Not Found", resp.Message)
+	assert.Nil(t, err)
+}
