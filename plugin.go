@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"log"
 	"net/url"
 )
 
@@ -19,15 +20,17 @@ type (
 func (p Plugin) Exec() error {
 
 	if len(p.Host) == 0 || len(p.Token) == 0 || len(p.Ref) == 0 || len(p.ID) == 0 {
+		log.Println("missing gitlab-ci config")
+
 		return errors.New("missing gitlab-ci config")
 	}
 
-	jenkins := NewGitlab(p.Host)
+	ci := NewGitlab(p.Host)
 
 	params := url.Values{
 		"token": []string{p.Token},
 		"ref":   []string{p.Ref},
 	}
 
-	return jenkins.trigger(p.ID, params, nil)
+	return ci.trigger(p.ID, params, nil)
 }
