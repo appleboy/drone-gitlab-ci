@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"net/url"
+	"time"
 )
 
 type (
@@ -17,10 +18,28 @@ type (
 
 	// Commit struct
 	Commit struct {
-		ID     int64  `json:"id"`
-		Sha    string `json:"sha"`
-		Ref    string `json:"ref"`
-		Status string `json:"status"`
+		ID         int         `json:"id"`
+		Sha        string      `json:"sha"`
+		Ref        string      `json:"ref"`
+		Status     string      `json:"status"`
+		BeforeSha  string      `json:"before_sha"`
+		Tag        bool        `json:"tag"`
+		YamlErrors interface{} `json:"yaml_errors"`
+		User       struct {
+			Name      string `json:"name"`
+			Username  string `json:"username"`
+			ID        int    `json:"id"`
+			State     string `json:"state"`
+			AvatarURL string `json:"avatar_url"`
+			WebURL    string `json:"web_url"`
+		} `json:"user"`
+		CreatedAt   time.Time   `json:"created_at"`
+		UpdatedAt   time.Time   `json:"updated_at"`
+		StartedAt   time.Time   `json:"started_at"`
+		FinishedAt  time.Time   `json:"finished_at"`
+		CommittedAt time.Time   `json:"committed_at"`
+		Duration    interface{} `json:"duration"`
+		Coverage    interface{} `json:"coverage"`
 	}
 )
 
