@@ -18,7 +18,7 @@ With `Go` installed
 
 ```
 $ go get -u -v github.com/appleboy/drone-gitlab-ci
-``` 
+```
 
 or build the binary with the following command:
 
