@@ -1,6 +1,6 @@
 ---
 date: 2017-06-26T00:00:00+00:00
-title: Gitlab-ci
+title: Gitlab-CI
 author: appleboy
 tags: [ infrastructure, trigger, gitlab, gitlab-ci ]
 repo: appleboy/drone-gitlab-ci
