@@ -47,6 +47,11 @@ func main() {
 			EnvVar: "PLUGIN_REF,GITLBA_REF",
 			Value:  "master",
 		},
+		cli.BoolFlag{
+			Name:   "debug,d",
+			Usage:  "debug mode",
+			EnvVar: "PLUGIN_DEBUG,GITLBA_DEBUG",
+		},
 		cli.StringFlag{
 			Name:   "env-file",
 			Usage:  "source env file",
@@ -102,6 +107,7 @@ func run(c *cli.Context) error {
 		Token: c.String("token"),
 		Ref:   c.String("ref"),
 		ID:    c.String("id"),
+		Debug: c.Bool("debug"),
 	}
 
 	return plugin.Exec()

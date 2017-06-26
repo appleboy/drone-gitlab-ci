@@ -14,6 +14,7 @@ type (
 		Token string
 		Ref   string
 		ID    string
+		Debug bool
 	}
 
 	// Commit struct
@@ -52,7 +53,7 @@ func (p Plugin) Exec() error {
 		return errors.New("missing gitlab-ci config")
 	}
 
-	ci := NewGitlab(p.Host)
+	ci := NewGitlab(p.Host, p.Debug)
 
 	params := url.Values{
 		"token": []string{p.Token},

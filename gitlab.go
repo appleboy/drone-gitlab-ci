@@ -12,15 +12,17 @@ import (
 type (
 	// Gitlab contain Auth and BaseURL
 	Gitlab struct {
-		Host string
+		Host  string
+		Debug bool
 	}
 )
 
 // NewGitlab is initial Gitlab object
-func NewGitlab(host string) *Gitlab {
+func NewGitlab(host string, debug bool) *Gitlab {
 	url := strings.TrimRight(host, "/")
 	return &Gitlab{
-		Host: url,
+		Host:  url,
+		Debug: debug,
 	}
 }
 
@@ -40,7 +42,28 @@ func (g *Gitlab) parseResponse(resp *http.Response, body interface{}) (err error
 		return
 	}
 
-	return json.Unmarshal(data, body)
+	if g.Debug {
+		fmt.Println()
+		fmt.Println("========= Response Body =========")
+		fmt.Println(string(data))
+		fmt.Println("=================================")
+	}
+
+	err = json.Unmarshal(data, body)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	if g.Debug && body != nil {
+		fmt.Println()
+		fmt.Println("========= JSON Body ==========")
+		fmt.Printf("%+v\n", body)
+		fmt.Println("==============================")
+	}
+
+	return nil
 }
 
 func (g *Gitlab) trigger(id string, params url.Values, body interface{}) (err error) {

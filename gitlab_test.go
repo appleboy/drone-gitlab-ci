@@ -54,7 +54,8 @@ func TestResponse404Body(t *testing.T) {
 	}
 
 	ci := &Gitlab{
-		Host: "https://gitlab.com",
+		Host:  "https://gitlab.com",
+		Debug: true,
 	}
 
 	params := url.Values{
