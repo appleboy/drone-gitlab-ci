@@ -4,7 +4,7 @@
 
 [![GoDoc](https://godoc.org/github.com/appleboy/drone-gitlab-ci?status.svg)](https://godoc.org/github.com/appleboy/drone-gitlab-ci) [![Build Status](http://drone.wu-boy.com/api/badges/appleboy/drone-gitlab-ci/status.svg)](http://drone.wu-boy.com/appleboy/drone-gitlab-ci) [![codecov](https://codecov.io/gh/appleboy/drone-gitlab-ci/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-gitlab-ci) [![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-gitlab-ci)](https://goreportcard.com/report/github.com/appleboy/drone-gitlab-ci) [![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-gitlab-ci.svg)](https://hub.docker.com/r/appleboy/drone-gitlab-ci/) [![](https://images.microbadger.com/badges/image/appleboy/drone-gitlab-ci.svg)](https://microbadger.com/images/appleboy/drone-gitlab-ci "Get your own image badge on microbadger.com")
 
-[Drone](https://github.com/drone/drone) plugin for trigger [gitlab-ci](https://gitlab-ci.io/) jobs.
+[Drone](https://github.com/drone/drone) plugin for trigger [gitlab-ci](https://about.gitlab.com/gitlab-ci) jobs.
 
 ## Build or Download a binary
 
@@ -53,49 +53,50 @@ There are three ways to trigger gitlab-ci jobs.
 <a name="usage-from-binary"></a>
 ### Usage from binary
 
-trigger single job.
+trigger job.
 
 ```bash
 drone-gitlab-ci \
-  --host http://gitlab-ci.example.com/ \
-  --user appleboy \
+  --host https://gitlab.com/ \
   --token XXXXXXXX \
-  --job drone-gitlab-ci-plugin
+  --ref master \
+  --id gitlab-ci-project-id
 ```
 
-trigger multiple jobs.
+Enable debug mode.
 
-```bash
+```diff
 drone-gitlab-ci \
-  --host http://gitlab-ci.example.com/ \
-  --user appleboy \
+  --host https://gitlab.com/ \
   --token XXXXXXXX \
-  --job drone-gitlab-ci-plugin-1 \
-  --job drone-gitlab-ci-plugin-2
+  --ref master \
+  --id gitlab-ci-project-id
++ --debug
 ```
 
 <a name="usage-from-docker"></a>
 ### Usage from docker
 
-trigger single job.
+trigger job.
 
 ```bash
 docker run --rm \
-  -e gitlab-ci_BASE_URL=http://gitlab-ci.example.com/
-  -e gitlab-ci_USER=appleboy
-  -e gitlab-ci_TOKEN=xxxxxxx
-  -e gitlab-ci_JOB=drone-gitlab-ci-plugin
+  -e GITLAB_HOST=https://gitlab.com/
+  -e GITLAB_TOKEN=xxxxx
+  -e GITLAB_REF=master
+  -e GITLAB_ID=gitlab-ci-project-id
   appleboy/drone-gitlab-ci
 ```
 
-trigger multiple jobs.
+Enable debug mode.
 
 ```bash
 docker run --rm \
-  -e gitlab-ci_BASE_URL=http://gitlab-ci.example.com/
-  -e gitlab-ci_USER=appleboy
-  -e gitlab-ci_TOKEN=xxxxxxx
-  -e gitlab-ci_JOB=drone-gitlab-ci-plugin-1,drone-gitlab-ci-plugin-2
+  -e GITLAB_HOST=https://gitlab.com/ \
+  -e GITLAB_TOKEN=xxxxx \
+  -e GITLAB_REF=master \
+  -e GITLAB_ID=gitlab-ci-project-id \
+  -e GITLAB_DEBUG=true \
   appleboy/drone-gitlab-ci
 ```
 
@@ -106,10 +107,11 @@ Execute from the working directory:
 
 ```
 docker run --rm \
-  -e PLUGIN_URL=http://example.com \
-  -e PLUGIN_USER=xxxxxxx \
-  -e PLUGIN_TOKEN=xxxxxxx \
-  -e PLUGIN_JOB=xxxxxxx \
+  -e PLUGIN_HOST=https://gitlab.com/ \
+  -e PLUGIN_TOKEN=xxxxx \
+  -e PLUGIN_REF=master \
+  -e PLUGIN_ID=gitlab-ci-project-id \
+  -e PLUGIN_DEBUG=true \
   -v $(pwd):$(pwd) \
   -w $(pwd) \
   appleboy/drone-gitlab-ci
