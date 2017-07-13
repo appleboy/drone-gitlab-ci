@@ -47,6 +47,22 @@ pipeline:
 +   debug: true
 ```
 
+Example configuration using credentials from secrets:
+
+pipeline:
+  gitlab:
+    image: appleboy/drone-gitlab-ci
+    host: https://gitlab.com
+-   token: xxxxxxxxxx
+    id: gitlab-project-id
++   secrets: [ gitlab_token ]
+
+# Secret Reference
+
+gitlab_token
+: gitlab-ci user token
+
+
 # Parameter Reference
 
 host
