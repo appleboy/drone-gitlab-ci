@@ -29,7 +29,6 @@ pipeline:
   codecov:
     image: robertstettner/drone-codecov
     secrets: [ codecov_token ]
-    debug: true
     when:
       event: [ push, pull_request ]
       status: [ success ]
