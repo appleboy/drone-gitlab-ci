@@ -10,7 +10,7 @@ clone:
 
 pipeline:
   test:
-    image: appleboy/golang-testing
+    image: golang:1.11
     pull: true
     environment:
       TAGS: netgo
@@ -44,7 +44,7 @@ pipeline:
       local: false
 
   release:
-    image: appleboy/golang-testing
+    image: golang:1.11
     pull: true
     environment:
       TAGS: netgo
