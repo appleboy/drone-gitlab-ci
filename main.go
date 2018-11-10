@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -94,7 +95,9 @@ REPOSITORY:
     Github: https://github.com/appleboy/drone-line
 `
 
-	app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func run(c *cli.Context) error {

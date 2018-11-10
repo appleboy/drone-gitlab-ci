@@ -47,7 +47,6 @@ pipeline:
       - make release
     when:
       event: [ tag ]
-      branch: [ refs/tags/* ]
       local: false
 
   publish_tag:
