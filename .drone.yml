@@ -9,19 +9,23 @@ clone:
     tags: true
 
 pipeline:
-  test:
+  lint:
     image: golang:1.11
     pull: true
+    group: test
     commands:
       - make vet
       - make lint
+      - make test-vendor
+      - make misspell-check
+
+  test:
+    image: golang:1.11
+    pull: true
+    group: test
+    commands:
       - make test
       - make coverage
-      - make build
-      # build binary for docker image
-      - make static_build
-    when:
-      event: [ push, tag, pull_request ]
 
   codecov:
     image: robertstettner/drone-codecov
