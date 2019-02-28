@@ -68,3 +68,24 @@ func TestResponse404Body(t *testing.T) {
 	assert.Equal(t, "404 Not Found", resp.Message)
 	assert.Nil(t, err)
 }
+
+func TestTriggerMaster(t *testing.T) {
+	type body struct {
+		Message string `json:"message"`
+	}
+
+	ci := &Gitlab{
+		Host:  "https://gitlab.com",
+		Debug: true,
+	}
+
+	params := url.Values{
+		"token": []string{"9184302d980918efad05bce8b97774"},
+		"ref":   []string{"master"},
+	}
+
+	resp := &body{}
+	// https://gitlab.com/appleboy/go-hello
+	err := ci.trigger("3573921", params, resp)
+	assert.Nil(t, err)
+}
