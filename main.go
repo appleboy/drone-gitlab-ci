@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"os"
+	"fmt"
+	"time"
 
 	"github.com/joho/godotenv"
 	_ "github.com/joho/godotenv/autoload"
@@ -13,10 +15,11 @@ import (
 var Version string
 
 func main() {
+	copyright := fmt.Sprintf("Copyright (c) %v Bo-Yi Wu", time.Now().Year())
 	app := cli.NewApp()
 	app.Name = "gitlab-ci plugin"
 	app.Usage = "trigger gitlab-ci jobs"
-	app.Copyright = "Copyright (c) 2017 Bo-Yi Wu"
+	app.Copyright = copyright
 	app.Authors = []cli.Author{
 		{
 			Name:  "Bo-Yi Wu",
