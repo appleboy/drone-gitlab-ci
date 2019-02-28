@@ -47,9 +47,7 @@ type (
 // Exec executes the plugin.
 func (p Plugin) Exec() error {
 
-	if len(p.Host) == 0 || len(p.Token) == 0 || len(p.Ref) == 0 || len(p.ID) == 0 {
-		log.Println("missing gitlab-ci config")
-
+	if len(p.Host) == 0 || len(p.Token) == 0 || len(p.ID) == 0 {
 		return errors.New("missing gitlab-ci config")
 	}
 

@@ -105,7 +105,7 @@ REPOSITORY:
 
 func run(c *cli.Context) error {
 	if c.String("env-file") != "" {
-		_ = godotenv.Load(c.String("env-file"))
+		godotenv.Load(c.String("env-file"))
 	}
 
 	plugin := Plugin{
