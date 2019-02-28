@@ -2,9 +2,24 @@
 
 # drone-gitlab-ci
 
-[![GoDoc](https://godoc.org/github.com/appleboy/drone-gitlab-ci?status.svg)](https://godoc.org/github.com/appleboy/drone-gitlab-ci) [![Build Status](http://drone.wu-boy.com/api/badges/appleboy/drone-gitlab-ci/status.svg)](http://drone.wu-boy.com/appleboy/drone-gitlab-ci) [![codecov](https://codecov.io/gh/appleboy/drone-gitlab-ci/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-gitlab-ci) [![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-gitlab-ci)](https://goreportcard.com/report/github.com/appleboy/drone-gitlab-ci) [![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-gitlab-ci.svg)](https://hub.docker.com/r/appleboy/drone-gitlab-ci/) [![](https://images.microbadger.com/badges/image/appleboy/drone-gitlab-ci.svg)](https://microbadger.com/images/appleboy/drone-gitlab-ci "Get your own image badge on microbadger.com")
+[![GoDoc](https://godoc.org/github.com/appleboy/drone-gitlab-ci?status.svg)](https://godoc.org/github.com/appleboy/drone-gitlab-ci) 
+[![Build Status](https://cloud.drone.io/api/badges/appleboy/drone-gitlab-ci/status.svg)](https://cloud.drone.io/appleboy/drone-gitlab-ci)
+[![codecov](https://codecov.io/gh/appleboy/drone-gitlab-ci/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-gitlab-ci) 
+[![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-gitlab-ci)](https://goreportcard.com/report/github.com/appleboy/drone-gitlab-ci) 
+[![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-gitlab-ci.svg)](https://hub.docker.com/r/appleboy/drone-gitlab-ci/) 
+[![](https://images.microbadger.com/badges/image/appleboy/drone-gitlab-ci.svg)](https://microbadger.com/images/appleboy/drone-gitlab-ci "Get your own image badge on microbadger.com")
 
 [Drone](https://github.com/drone/drone) plugin for trigger [gitlab-ci](https://about.gitlab.com/gitlab-ci) jobs.
+
+## GitLab Setting
+
+See the detail documentation for [Triggering pipelines through the API](https://docs.gitlab.com/ee/ci/triggers/). How to get the token from a new trigger? You can add a new trigger by going to your project’s `Settings ➔ CI/CD` under Triggers. 
+
+<img src="images/token.png">
+
+How to get the project ID? going to your project’s `Settings ➔ General` under Gerneral project.
+
+<img src="images/projectID.png">
 
 ## Build or Download a binary
 
@@ -46,9 +61,15 @@ docker: Error response from daemon: Container command
 
 There are three ways to trigger gitlab-ci jobs.
 
-* [usage from binary](#usage-from-binary)
-* [usage from docker](#usage-from-docker)
-* [usage from drone ci](#usage-from-drone-ci)
+- [drone-gitlab-ci](#drone-gitlab-ci)
+  - [GitLab Setting](#gitlab-setting)
+  - [Build or Download a binary](#build-or-download-a-binary)
+  - [Docker](#docker)
+  - [Usage](#usage)
+    - [Usage from binary](#usage-from-binary)
+    - [Usage from docker](#usage-from-docker)
+    - [Usage from drone ci](#usage-from-drone-ci)
+  - [Testing](#testing)
 
 <a name="usage-from-binary"></a>
 ### Usage from binary
