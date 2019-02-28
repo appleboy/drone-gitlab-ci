@@ -18,17 +18,6 @@ steps:
   - name: gopath
     path: /go
 
-- name: lint
-  pull: always
-  image: golang:1.12
-  commands:
-  - make lint
-  environment:
-    GO111MODULE: on
-  volumes:
-  - name: gopath
-    path: /go
-
 - name: misspell
   pull: always
   image: golang:1.12
@@ -80,7 +69,7 @@ steps:
   pull: always
   image: golang:1.12
   commands:
-  - "go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/amd64/drone-discord"
+  - "go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/amd64/drone-gitlab-ci"
   environment:
     CGO_ENABLED: 0
     GO111MODULE: on
@@ -93,7 +82,7 @@ steps:
   pull: always
   image: golang:1.12
   commands:
-  - "go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/amd64/drone-discord"
+  - "go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/amd64/drone-gitlab-ci"
   environment:
     CGO_ENABLED: 0
     GO111MODULE: on
@@ -105,16 +94,16 @@ steps:
   pull: always
   image: golang:1.12
   commands:
-  - ./release/linux/amd64/drone-discord --help
+  - ./release/linux/amd64/drone-gitlab-ci --help
 
 - name: dryrun
   pull: always
   image: plugins/docker:linux-amd64
   settings:
-    cache_from: appleboy/drone-discord
+    cache_from: appleboy/drone-gitlab-ci
     dockerfile: docker/Dockerfile.linux.amd64
     dry_run: true
-    repo: appleboy/drone-discord
+    repo: appleboy/drone-gitlab-ci
     tags: linux-amd64
   when:
     event:
@@ -126,12 +115,12 @@ steps:
   settings:
     auto_tag: true
     auto_tag_suffix: linux-amd64
-    cache_from: appleboy/drone-discord
+    cache_from: appleboy/drone-gitlab-ci
     daemon_off: false
     dockerfile: docker/Dockerfile.linux.amd64
     password:
       from_secret: docker_password
-    repo: appleboy/drone-discord
+    repo: appleboy/drone-gitlab-ci
     username:
       from_secret: docker_username
   when:
@@ -161,7 +150,7 @@ steps:
   pull: always
   image: golang:1.12
   commands:
-  - "go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm64/drone-discord"
+  - "go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm64/drone-gitlab-ci"
   environment:
     CGO_ENABLED: 0
     GO111MODULE: on
@@ -174,7 +163,7 @@ steps:
   pull: always
   image: golang:1.12
   commands:
-  - "go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm64/drone-discord"
+  - "go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm64/drone-gitlab-ci"
   environment:
     CGO_ENABLED: 0
     GO111MODULE: on
@@ -186,16 +175,16 @@ steps:
   pull: always
   image: golang:1.12
   commands:
-  - ./release/linux/arm64/drone-discord --help
+  - ./release/linux/arm64/drone-gitlab-ci --help
 
 - name: dryrun
   pull: always
   image: plugins/docker:linux-arm64
   settings:
-    cache_from: appleboy/drone-discord
+    cache_from: appleboy/drone-gitlab-ci
     dockerfile: docker/Dockerfile.linux.arm64
     dry_run: true
-    repo: appleboy/drone-discord
+    repo: appleboy/drone-gitlab-ci
     tags: linux-arm64
   when:
     event:
@@ -207,12 +196,12 @@ steps:
   settings:
     auto_tag: true
     auto_tag_suffix: linux-arm64
-    cache_from: appleboy/drone-discord
+    cache_from: appleboy/drone-gitlab-ci
     daemon_off: false
     dockerfile: docker/Dockerfile.linux.arm64
     password:
       from_secret: docker_password
-    repo: appleboy/drone-discord
+    repo: appleboy/drone-gitlab-ci
     username:
       from_secret: docker_username
   when:
@@ -242,7 +231,7 @@ steps:
   pull: always
   image: golang:1.12
   commands:
-  - "go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm/drone-discord"
+  - "go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm/drone-gitlab-ci"
   environment:
     CGO_ENABLED: 0
     GO111MODULE: on
@@ -255,7 +244,7 @@ steps:
   pull: always
   image: golang:1.12
   commands:
-  - "go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm/drone-discord"
+  - "go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm/drone-gitlab-ci"
   environment:
     CGO_ENABLED: 0
     GO111MODULE: on
@@ -267,16 +256,16 @@ steps:
   pull: always
   image: golang:1.12
   commands:
-  - ./release/linux/arm/drone-discord --help
+  - ./release/linux/arm/drone-gitlab-ci --help
 
 - name: dryrun
   pull: always
   image: plugins/docker:linux-arm
   settings:
-    cache_from: appleboy/drone-discord
+    cache_from: appleboy/drone-gitlab-ci
     dockerfile: docker/Dockerfile.linux.arm
     dry_run: true
-    repo: appleboy/drone-discord
+    repo: appleboy/drone-gitlab-ci
     tags: linux-arm
   when:
     event:
@@ -288,12 +277,12 @@ steps:
   settings:
     auto_tag: true
     auto_tag_suffix: linux-arm
-    cache_from: appleboy/drone-discord
+    cache_from: appleboy/drone-gitlab-ci
     daemon_off: false
     dockerfile: docker/Dockerfile.linux.arm
     password:
       from_secret: docker_password
-    repo: appleboy/drone-discord
+    repo: appleboy/drone-gitlab-ci
     username:
       from_secret: docker_username
   when:
