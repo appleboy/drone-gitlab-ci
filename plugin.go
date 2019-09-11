@@ -11,12 +11,12 @@ import (
 type (
 	// Plugin values.
 	Plugin struct {
-		Host         string
-		Token        string
-		Ref          string
-		ID           string
-		Debug        bool
-		Environment []string
+		Host            string
+		Token           string
+		Ref             string
+		ID              string
+		Debug           bool
+		Environment     []string
 		WaitOnCompleted bool
 	}
 )
@@ -32,13 +32,13 @@ func (p Plugin) Exec() error {
 	git.SetBaseURL(fmt.Sprintf("%s/api/v4", p.Host))
 
 	options := &gitlab.CreatePipelineOptions{
-		Ref: p.Ref,
-		Variables: make([]*gitlab.PipelineVariable, 0)
+		Ref:       p.Ref,
+		Variables: make([]*gitlab.PipelineVariable, 0),
 	}
-	for _, variable := p.Environment {
+	for _, variable := range p.Environment {
 		kvPair := strings.Split(variable, "=")
 		options.Variables = append(options.Variables, &gitlab.PipelineVariable{
-			Key: kvPair[0],
+			Key:   kvPair[0],
 			Value: kvPair[1],
 		})
 	}
@@ -61,16 +61,15 @@ func (p Plugin) Exec() error {
 				log.Println("gitlab-ci error: ", err.Error())
 				return err
 			}
-			success, failed, canceled, skipped
-			switch(pipeline.Status) {
-				case "success":
-					return nil
-				case "failed", "canceled", "skipped":
-					return fmt.Errorf("gitlab-ci pipeline status: %s which is not a success, object: %#v", *pipeline)
-				case "pending", "running":
-					time.Sleep(30 * time.Second)
+			switch pipeline.Status {
+			case "success":
+				return nil
+			case "failed", "canceled", "skipped":
+				return fmt.Errorf("gitlab-ci pipeline status: %s which is not a success, object: %#v", *pipeline)
+			case "pending", "running":
+				time.Sleep(30 * time.Second)
 			}
-			
+
 		}
 	}
 	return nil
