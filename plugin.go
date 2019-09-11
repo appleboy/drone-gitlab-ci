@@ -67,7 +67,7 @@ func (p Plugin) Exec() error {
 			case "success":
 				return nil
 			case "failed", "canceled", "skipped":
-				return fmt.Errorf("gitlab-ci pipeline status: %s which is not a success, object: %#v", *pipeline)
+				return fmt.Errorf("gitlab-ci pipeline status: %s which is not a success, object: %#v", pipeline.Status, *pipeline)
 			case "pending", "running":
 				time.Sleep(30 * time.Second)
 			}
