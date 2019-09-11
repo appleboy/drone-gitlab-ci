@@ -31,7 +31,11 @@ func (p Plugin) Exec() error {
 	}
 
 	git := gitlab.NewClient(nil, p.Token)
-	git.SetBaseURL(fmt.Sprintf("%s/api/v4", p.Host))
+	err := git.SetBaseURL(fmt.Sprintf("%s/api/v4", p.Host))
+	if err != nil {
+		log.Println("failed setting base url: ", err.Error())
+		return err
+	}
 
 	options := &gitlab.CreatePipelineOptions{
 		Ref:       &p.Ref,
