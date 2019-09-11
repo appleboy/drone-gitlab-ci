@@ -44,7 +44,7 @@ func (p Plugin) Exec() error {
 			Value: kvPair[1],
 		})
 	}
-	pipeline, response, err := git.Pipelines.CreatePipeline(p.ID, options)
+	pipeline, _, err := git.Pipelines.CreatePipeline(p.ID, options)
 	if err != nil {
 		log.Println("gitlab-ci error: ", err.Error())
 		return err
@@ -58,7 +58,7 @@ func (p Plugin) Exec() error {
 	if p.WaitOnCompleted {
 		// sit and watch the pipeline finish
 		for {
-			pipeline, resp, err := git.Pipelines.GetPipeline(p.ID, pipeline.ID)
+			pipeline, _, err = git.Pipelines.GetPipeline(p.ID, pipeline.ID)
 			if err != nil {
 				log.Println("gitlab-ci error: ", err.Error())
 				return err
