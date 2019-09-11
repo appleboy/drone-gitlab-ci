@@ -3,9 +3,11 @@ package main
 import (
 	"errors"
 	"fmt"
-	gitlab "github.com/xanzy/go-gitlab"
 	"log"
+	"strings"
 	"time"
+
+	gitlab "github.com/xanzy/go-gitlab"
 )
 
 type (
@@ -32,7 +34,7 @@ func (p Plugin) Exec() error {
 	git.SetBaseURL(fmt.Sprintf("%s/api/v4", p.Host))
 
 	options := &gitlab.CreatePipelineOptions{
-		Ref:       p.Ref,
+		Ref:       &p.Ref,
 		Variables: make([]*gitlab.PipelineVariable, 0),
 	}
 	for _, variable := range p.Environment {
