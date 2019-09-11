@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	gitlab "github.com/xanzy/go-gitlab"
 	"log"
 	"net/url"
 	"time"
@@ -10,37 +11,13 @@ import (
 type (
 	// Plugin values.
 	Plugin struct {
-		Host  string
-		Token string
-		Ref   string
-		ID    string
-		Debug bool
-	}
-
-	// Commit struct
-	Commit struct {
-		ID         int         `json:"id"`
-		Sha        string      `json:"sha"`
-		Ref        string      `json:"ref"`
-		Status     string      `json:"status"`
-		BeforeSha  string      `json:"before_sha"`
-		Tag        bool        `json:"tag"`
-		YamlErrors interface{} `json:"yaml_errors"`
-		User       struct {
-			Name      string `json:"name"`
-			Username  string `json:"username"`
-			ID        int    `json:"id"`
-			State     string `json:"state"`
-			AvatarURL string `json:"avatar_url"`
-			WebURL    string `json:"web_url"`
-		} `json:"user"`
-		CreatedAt   time.Time   `json:"created_at"`
-		UpdatedAt   time.Time   `json:"updated_at"`
-		StartedAt   time.Time   `json:"started_at"`
-		FinishedAt  time.Time   `json:"finished_at"`
-		CommittedAt time.Time   `json:"committed_at"`
-		Duration    interface{} `json:"duration"`
-		Coverage    interface{} `json:"coverage"`
+		Host         string
+		Token        string
+		Ref          string
+		ID           string
+		Debug        bool
+		Environment []string
+		WaitOnCompleted bool
 	}
 )
 
@@ -51,26 +28,48 @@ func (p Plugin) Exec() error {
 		return errors.New("missing gitlab-ci config")
 	}
 
-	ci := NewGitlab(p.Host, p.Debug)
+	git := gitlab.NewClient(nil, p.Token)
+	git.SetBaseURL(fmt.Sprintf("%s/api/v4", p.Host))
 
-	params := url.Values{
-		"token": []string{p.Token},
-		"ref":   []string{p.Ref},
+	options := &gitlab.CreatePipelineOptions{
+		Ref: p.Ref,
+		Variables: make([]*gitlab.PipelineVariable, 0)
 	}
-
-	body := &Commit{}
-
-	err := ci.trigger(p.ID, params, body)
-
+	for _, variable := p.Environment {
+		kvPair := strings.Split(variable, "=")
+		options.Variables = append(options.Variables, &gitlab.PipelineVariable{
+			Key: kvPair[0],
+			Value: kvPair[1],
+		})
+	}
+	pipeline, response, err := git.Pipelines.CreatePipeline(p.ID, options)
 	if err != nil {
-		log.Println("gitlab-ci error:", err.Error())
+		log.Println("gitlab-ci error: ", err.Error())
 		return err
 	}
 
-	log.Println("build id:", body.ID)
-	log.Println("build sha:", body.Sha)
-	log.Println("build ref:", body.Ref)
-	log.Println("build status:", body.Status)
+	log.Println("build id:", pipeline.ID)
+	log.Println("build sha:", pipeline.SHA)
+	log.Println("build ref:", pipeline.Ref)
+	log.Println("build status:", pipeline.Status)
 
+	if p.WaitOnCompleted {
+		// sit and watch the pipeline finish
+		for {
+			pipeline, resp, err := git.Pipelines.GetPipeline(p.ID, pipeline.ID)
+			if err != nil {
+				log.Println("gitlab-ci error: ", err.Error())
+				return err
+			}
+			success, failed, canceled, skipped
+			switch(pipeline.Status) {
+				case "success":
+					break
+				case "failed", "canceled", "skipped":
+					return fmt.Errorf("gitlab-ci pipeline status: %s which is not a success, object: %#v", *pipeline)
+			}
+			time.Sleep(30 * time.Second)
+		}
+	}
 	return nil
 }

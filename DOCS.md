@@ -81,3 +81,6 @@ id
 
 debug
 : enable debug mode
+
+environment
+: list of strings in the form `VARIABLE_NAME=VALUE` which will be passed to the pipeline.
