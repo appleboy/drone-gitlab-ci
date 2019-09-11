@@ -2,9 +2,9 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	gitlab "github.com/xanzy/go-gitlab"
 	"log"
-	"net/url"
 	"time"
 )
 
