@@ -84,3 +84,6 @@ debug
 
 environment
 : list of strings in the form `VARIABLE_NAME=VALUE` which will be passed to the pipeline.
+
+wait
+: bool - if true, will wait for pipeline to finish before reporting success or failure.

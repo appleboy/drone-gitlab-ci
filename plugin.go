@@ -13,13 +13,13 @@ import (
 type (
 	// Plugin values.
 	Plugin struct {
-		Host            string
-		Token           string
-		Ref             string
-		ID              string
-		Debug           bool
-		Environment     []string
-		WaitOnCompleted bool
+		Host        string
+		Token       string
+		Ref         string
+		ID          string
+		Debug       bool
+		Environment []string
+		Wait        bool
 	}
 )
 
@@ -59,7 +59,7 @@ func (p Plugin) Exec() error {
 	log.Println("build ref:", pipeline.Ref)
 	log.Println("build status:", pipeline.Status)
 
-	if p.WaitOnCompleted {
+	if p.Wait {
 		// sit and watch the pipeline finish
 		for {
 			pipeline, _, err = git.Pipelines.GetPipeline(p.ID, pipeline.ID)
