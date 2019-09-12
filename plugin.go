@@ -26,8 +26,14 @@ type (
 // Exec executes the plugin.
 func (p Plugin) Exec() error {
 
-	if len(p.Host) == 0 || len(p.Token) == 0 || len(p.ID) == 0 {
-		return errors.New("missing gitlab-ci config")
+	if len(p.Host) == 0 {
+		return errors.New("missing host")
+	}
+	if len(p.Token) == 0 {
+		return errors.New("missing token")
+	}
+	if len(p.ID) == 0 {
+		return errors.New("missing project id")
 	}
 
 	git := gitlab.NewClient(nil, p.Token)

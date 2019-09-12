@@ -56,11 +56,21 @@ func main() {
 			Usage:  "debug mode",
 			EnvVar: "PLUGIN_DEBUG,GITLBA_DEBUG",
 		},
+		cli.BoolFlag{
+			Name:   "wait,w",
+			Usage:  "wait on pipeline completion before returning",
+			EnvVar: "PLUGIN_WAIT,GITLAB_WAIT",
+		},
 		cli.StringFlag{
 			Name:   "env-file",
 			Usage:  "source env file",
 			EnvVar: "ENV_FILE",
 			Value:  ".env",
+		},
+		cli.StringSliceFlag{
+			Name:   "gitlab-env",
+			Usage:  "variables to pass to gitlab",
+			EnvVar: "GITLAB_ENV",
 		},
 	}
 
@@ -109,11 +119,13 @@ func run(c *cli.Context) error {
 	}
 
 	plugin := Plugin{
-		Host:  c.String("host"),
-		Token: c.String("token"),
-		Ref:   c.String("ref"),
-		ID:    c.String("id"),
-		Debug: c.Bool("debug"),
+		Host:        c.String("host"),
+		Token:       c.String("token"),
+		Ref:         c.String("ref"),
+		ID:          c.String("id"),
+		Debug:       c.Bool("debug"),
+		Wait:        c.Bool("wait"),
+		Environment: c.StringSlice("gitlab-env"),
 	}
 
 	return plugin.Exec()
