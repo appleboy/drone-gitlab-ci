@@ -13,7 +13,7 @@
 
 ## GitLab Setting
 
-See the detail documentation for [Triggering pipelines through the API](https://docs.gitlab.com/ee/ci/triggers/). How to get the token from a new trigger? You can add a new trigger by going to your project’s `Settings ➔ CI/CD` under Triggers. 
+To use this, you will need an api token. You can get one by going to gitlab -> click your profile picture in the top right corner -> settings -> access tokens. You will need to give the token the "api" scope. 
 
 <img src="images/token.png">
 

@@ -59,6 +59,30 @@ pipeline:
 +   secrets: [ gitlab_token ]
 ```
 
+Example configuration with environment variables set on the gitlab pipeline:
+
+```diff
+pipeline:
+  gitlab:
+    image: appleboy/drone-gitlab-ci
+    host: https://gitlab.com
+    token: xxxxxxxxxx
+    id: gitlab-project-id
++   gitlab-env:
++     - VARIABLE_NAME=VALUE
+```
+
+Example config where the job will wait on the gitlab pipeline completing:
+```diff
+pipeline:
+  gitlab:
+    image: appleboy/drone-gitlab-ci
+    host: https://gitlab.com
+    token: xxxxxxxxxx
+    id: gitlab-project-id
++   wait: true
+```
+
 # Secret Reference
 
 gitlab_token
@@ -82,7 +106,7 @@ id
 debug
 : enable debug mode
 
-environment
+gitlab-env
 : list of strings in the form `VARIABLE_NAME=VALUE` which will be passed to the pipeline.
 
 wait
