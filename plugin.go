@@ -64,6 +64,7 @@ func (p Plugin) Exec() error {
 	log.Println("build sha:", pipeline.SHA)
 	log.Println("build ref:", pipeline.Ref)
 	log.Println("build status:", pipeline.Status)
+	log.Println("web url: ", pipeline.WebURL)
 
 	if p.Wait {
 		// sit and watch the pipeline finish
@@ -79,6 +80,7 @@ func (p Plugin) Exec() error {
 			case "failed", "canceled", "skipped":
 				return fmt.Errorf("gitlab-ci pipeline status: %s which is not a success, object: %#v", pipeline.Status, *pipeline)
 			case "pending", "running":
+				log.Printf("pipeline status: %s\n", pipeline.Status)
 				time.Sleep(30 * time.Second)
 			}
 
