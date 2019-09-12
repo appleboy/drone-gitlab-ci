@@ -32,29 +32,29 @@ func main() {
 		cli.StringFlag{
 			Name:   "host,l",
 			Usage:  "gitlab-ci base url",
-			EnvVar: "PLUGIN_HOST,GITLBA_HOST",
+			EnvVar: "PLUGIN_HOST,GITLAB_HOST",
 			Value:  "https://gitlab.com",
 		},
 		cli.StringFlag{
 			Name:   "token,t",
 			Usage:  "gitlab-ci token",
-			EnvVar: "PLUGIN_TOKEN,GITLBA_TOKEN",
+			EnvVar: "PLUGIN_TOKEN,GITLAB_TOKEN",
 		},
 		cli.StringFlag{
 			Name:   "id,i",
 			Usage:  "gitlab-ci project id",
-			EnvVar: "PLUGIN_ID,GITLBA_PROJECT_ID",
+			EnvVar: "PLUGIN_ID,GITLAB_PROJECT_ID",
 		},
 		cli.StringFlag{
 			Name:   "ref,r",
 			Usage:  "gitlab-ci valid refs are only the branches and tags",
-			EnvVar: "PLUGIN_REF,GITLBA_REF",
+			EnvVar: "PLUGIN_REF,GITLAB_REF",
 			Value:  "master",
 		},
 		cli.BoolFlag{
 			Name:   "debug,d",
 			Usage:  "debug mode",
-			EnvVar: "PLUGIN_DEBUG,GITLBA_DEBUG",
+			EnvVar: "PLUGIN_DEBUG,GITLAB_DEBUG",
 		},
 		cli.BoolFlag{
 			Name:   "wait,w",
@@ -117,7 +117,7 @@ func run(c *cli.Context) error {
 	if c.String("env-file") != "" {
 		godotenv.Load(c.String("env-file"))
 	}
-
+	fmt.Printf(c.String("token"))
 	plugin := Plugin{
 		Host:        c.String("host"),
 		Token:       c.String("token"),
