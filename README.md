@@ -1,25 +1,25 @@
-<img src="images/logo.png">
-
 # drone-gitlab-ci
 
-[![GoDoc](https://godoc.org/github.com/appleboy/drone-gitlab-ci?status.svg)](https://godoc.org/github.com/appleboy/drone-gitlab-ci) 
+![logo](./images/logo.png)
+
+[![GoDoc](https://godoc.org/github.com/appleboy/drone-gitlab-ci?status.svg)](https://godoc.org/github.com/appleboy/drone-gitlab-ci)
 [![Build Status](https://cloud.drone.io/api/badges/appleboy/drone-gitlab-ci/status.svg)](https://cloud.drone.io/appleboy/drone-gitlab-ci)
-[![codecov](https://codecov.io/gh/appleboy/drone-gitlab-ci/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-gitlab-ci) 
-[![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-gitlab-ci)](https://goreportcard.com/report/github.com/appleboy/drone-gitlab-ci) 
-[![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-gitlab-ci.svg)](https://hub.docker.com/r/appleboy/drone-gitlab-ci/) 
-[![](https://images.microbadger.com/badges/image/appleboy/drone-gitlab-ci.svg)](https://microbadger.com/images/appleboy/drone-gitlab-ci "Get your own image badge on microbadger.com")
+[![codecov](https://codecov.io/gh/appleboy/drone-gitlab-ci/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-gitlab-ci)
+[![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-gitlab-ci)](https://goreportcard.com/report/github.com/appleboy/drone-gitlab-ci)
+[![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-gitlab-ci.svg)](https://hub.docker.com/r/appleboy/drone-gitlab-ci/)
+[![microbadger](https://images.microbadger.com/badges/image/appleboy/drone-gitlab-ci.svg)](https://microbadger.com/images/appleboy/drone-gitlab-ci "Get your own image badge on microbadger.com")
 
 [Drone](https://github.com/drone/drone) plugin for trigger [gitlab-ci](https://about.gitlab.com/gitlab-ci) jobs.
 
 ## GitLab Setting
 
-See the detail documentation for [Triggering pipelines through the API](https://docs.gitlab.com/ee/ci/triggers/). How to get the token from a new trigger? You can add a new trigger by going to your project’s `Settings ➔ CI/CD` under Triggers. 
+See the detail documentation for [Triggering pipelines through the API](https://docs.gitlab.com/ee/ci/triggers/). How to get the token from a new trigger? You can add a new trigger by going to your project’s `Settings ➔ CI/CD` under Triggers.
 
-<img src="images/token.png">
+![token](./images/token.png)
 
 How to get the project ID? going to your project’s `Settings ➔ General` under Gerneral project.
 
-<img src="images/projectID.png">
+![projectID](./images/projectID.png)
 
 ## Build or Download a binary
 
@@ -31,47 +31,28 @@ The pre-compiled binaries can be downloaded from [release page](https://github.c
 
 With `Go` installed
 
-```
-$ go get -u -v github.com/appleboy/drone-gitlab-ci
+```sh
+go get -u -v github.com/appleboy/drone-gitlab-ci
 ```
 
 or build the binary with the following command:
 
-```
-$ make build
+```sh
+make build
 ```
 
 ## Docker
 
 Build the docker image with the following commands:
 
-```
-$ make docker
-```
-
-Please note incorrectly building the image for the correct x64 linux and with
-GCO disabled will result in an error when running the Docker image:
-
-```
-docker: Error response from daemon: Container command
-'/bin/drone-gitlab-ci' not found or does not exist..
+```sh
+make docker
 ```
 
 ## Usage
 
 There are three ways to trigger gitlab-ci jobs.
 
-- [drone-gitlab-ci](#drone-gitlab-ci)
-  - [GitLab Setting](#gitlab-setting)
-  - [Build or Download a binary](#build-or-download-a-binary)
-  - [Docker](#docker)
-  - [Usage](#usage)
-    - [Usage from binary](#usage-from-binary)
-    - [Usage from docker](#usage-from-docker)
-    - [Usage from drone ci](#usage-from-drone-ci)
-  - [Testing](#testing)
-
-<a name="usage-from-binary"></a>
 ### Usage from binary
 
 trigger job.
@@ -95,7 +76,6 @@ drone-gitlab-ci \
 + --debug
 ```
 
-<a name="usage-from-docker"></a>
 ### Usage from docker
 
 trigger job.
@@ -121,12 +101,11 @@ docker run --rm \
   appleboy/drone-gitlab-ci
 ```
 
-<a name="usage-from-drone-ci"></a>
 ### Usage from drone ci
 
 Execute from the working directory:
 
-```
+```sh
 docker run --rm \
   -e PLUGIN_HOST=https://gitlab.com/ \
   -e PLUGIN_TOKEN=xxxxx \
@@ -144,6 +123,6 @@ You can get more [information](DOCS.md) about how to use scp plugin in drone.
 
 Test the package with the following command:
 
-```
-$ make test
+```sh
+make test
 ```
