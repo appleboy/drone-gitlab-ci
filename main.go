@@ -117,7 +117,6 @@ func run(c *cli.Context) error {
 	if c.String("env-file") != "" {
 		godotenv.Load(c.String("env-file"))
 	}
-	fmt.Printf(c.String("token"))
 	plugin := Plugin{
 		Host:        c.String("host"),
 		Token:       c.String("token"),
