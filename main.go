@@ -32,34 +32,34 @@ func main() {
 		cli.StringFlag{
 			Name:   "host,l",
 			Usage:  "gitlab-ci base url",
-			EnvVar: "PLUGIN_HOST,GITLAB_HOST",
+			EnvVar: "PLUGIN_HOST,GITLAB_HOST,INPUT_HOST",
 			Value:  "https://gitlab.com",
 		},
 		cli.StringFlag{
 			Name:   "token,t",
 			Usage:  "gitlab-ci token",
-			EnvVar: "PLUGIN_TOKEN,GITLAB_TOKEN",
+			EnvVar: "PLUGIN_TOKEN,GITLAB_TOKEN,INPUT_TOKEN",
 		},
 		cli.StringFlag{
 			Name:   "id,i",
 			Usage:  "gitlab-ci project id",
-			EnvVar: "PLUGIN_ID,GITLAB_PROJECT_ID",
+			EnvVar: "PLUGIN_ID,GITLAB_PROJECT_ID,INPUT_PROJECT_ID",
 		},
 		cli.StringFlag{
 			Name:   "ref,r",
 			Usage:  "gitlab-ci valid refs are only the branches and tags",
-			EnvVar: "PLUGIN_REF,GITLAB_REF",
+			EnvVar: "PLUGIN_REF,GITLAB_REF,INPUT_REF",
 			Value:  "master",
 		},
 		cli.BoolFlag{
 			Name:   "debug,d",
 			Usage:  "debug mode",
-			EnvVar: "PLUGIN_DEBUG,GITLAB_DEBUG",
+			EnvVar: "PLUGIN_DEBUG,GITLAB_DEBUG,INPUT_DEBUG",
 		},
 		cli.BoolFlag{
 			Name:   "wait,w",
 			Usage:  "wait on pipeline completion before returning",
-			EnvVar: "PLUGIN_WAIT,GITLAB_WAIT",
+			EnvVar: "PLUGIN_WAIT,GITLAB_WAIT,INPUT_WAIT",
 		},
 		cli.StringFlag{
 			Name:   "env-file",
@@ -70,7 +70,7 @@ func main() {
 		cli.StringSliceFlag{
 			Name:   "gitlab-env",
 			Usage:  "variables to pass to gitlab",
-			EnvVar: "GITLAB_ENV",
+			EnvVar: "PLUGIN_ENV,GITLAB_ENV,INPUT_ENV",
 		},
 	}
 

@@ -1,5 +1,5 @@
 ---
-date: 2017-06-26T00:00:00+00:00
+date: 2019-19-19T00:00:00+00:00
 title: Gitlab-CI
 author: appleboy
 tags: [ infrastructure, trigger, gitlab, gitlab-ci ]
@@ -11,85 +11,68 @@ image: appleboy/drone-gitlab-ci
 The Gitlab-ci plugin allows you to trigger Gitlab-ci job automatically. The below pipeline configuration demonstrates simple usage:
 
 ```yaml
-pipeline:
-  gitlab:
-    image: appleboy/drone-gitlab-ci
+- name: trigger gitlab job
+  image: appleboy/drone-gitlab-ci
+  settings:
     host: https://gitlab.com
     token: xxxxxxxxxx
     ref: master
     id: gitlab-project-id
-```
-
-Example configuration for success builds:
-
-```diff
-pipeline:
-  gitlab:
-    image: appleboy/drone-gitlab-ci
-    host: https://gitlab.com
-    token: xxxxxxxxxx
-    ref: master
-    id: gitlab-project-id
-+   when:
-+     status: [ success ]
 ```
 
 Example configuration with debug mode:
 
 ```diff
-pipeline:
-  gitlab:
+  - name: trigger gitlab job
     image: appleboy/drone-gitlab-ci
-    host: https://gitlab.com
-    token: xxxxxxxxxx
-    ref: master
-    id: gitlab-project-id
-+   debug: true
+    settings:
+      host: https://gitlab.com
+      token: xxxxxxxxxx
+      ref: master
+      id: gitlab-project-id
++     debug: true
 ```
 
 Example configuration using credentials from secrets:
 
 ```diff
-pipeline:
-  gitlab:
+  - name: trigger gitlab job
     image: appleboy/drone-gitlab-ci
-    host: https://gitlab.com
--   token: xxxxxxxxxx
-    id: gitlab-project-id
-+   secrets: [ gitlab_token ]
+    settings:
+      host: https://gitlab.com
++     token:
++       from_secret: gitlab_token
+      id: gitlab-project-id
 ```
 
 Example configuration with environment variables set on the gitlab pipeline:
 
 ```diff
-pipeline:
-  gitlab:
+  - name: trigger gitlab job
     image: appleboy/drone-gitlab-ci
-    host: https://gitlab.com
-    token: xxxxxxxxxx
-    id: gitlab-project-id
-+   gitlab-env:
-+     - VARIABLE_NAME=VALUE
+    settings:
+      host: https://gitlab.com
+      token:
+        from_secret: gitlab_token
+      id: gitlab-project-id
++     gitlab-env:
++       - VARIABLE_NAME=VALUE
 ```
 
 Example config where the job will wait on the gitlab pipeline completing:
+
 ```diff
-pipeline:
-  gitlab:
+  - name: trigger gitlab job
     image: appleboy/drone-gitlab-ci
-    host: https://gitlab.com
-    token: xxxxxxxxxx
-    id: gitlab-project-id
-+   wait: true
+    settings:
+      host: https://gitlab.com
+      token:
+        from_secret: gitlab_token
+      id: gitlab-project-id
++     wait: true
 ```
 
-# Secret Reference
-
-gitlab_token
-: gitlab-ci user token
-
-
-# Parameter Reference
+## Parameter Reference
 
 host
 : gitlab-ci server base url.
