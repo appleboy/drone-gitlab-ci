@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -23,19 +24,17 @@ func TestJSONBodyParseError(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-
 	assert.NotNil(t, err)
 }
 
 func TestGitlabHost(t *testing.T) {
 	plugin := Plugin{
 		Host:  "https://gitlab.com",
-		Token: "foo",
-		ID:    "bar",
-		Ref:   "master",
+		Token: "testing this gitlab client",
+		ID:    "foo",
+		Ref:   "bar",
 	}
 
 	err := plugin.Exec()
-
-	assert.Nil(t, err)
+	assert.True(t, strings.Contains(err.Error(), "Unauthorized"))
 }
