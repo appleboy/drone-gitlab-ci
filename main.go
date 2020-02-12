@@ -56,11 +56,21 @@ func main() {
 			Usage:  "debug mode",
 			EnvVar: "PLUGIN_DEBUG,GITLAB_DEBUG,INPUT_DEBUG",
 		},
+		cli.BoolFlag{
+			Name:   "wait,w",
+			Usage:  "wait on pipeline completion before returning",
+			EnvVar: "PLUGIN_WAIT,GITLAB_WAIT,INPUT_WAIT",
+		},
 		cli.StringFlag{
 			Name:   "env-file",
 			Usage:  "source env file",
 			EnvVar: "ENV_FILE",
 			Value:  ".env",
+		},
+		cli.StringSliceFlag{
+			Name:   "gitlab-env",
+			Usage:  "variables to pass to gitlab",
+			EnvVar: "PLUGIN_ENV,GITLAB_ENV,INPUT_ENV",
 		},
 	}
 
@@ -107,13 +117,14 @@ func run(c *cli.Context) error {
 	if c.String("env-file") != "" {
 		godotenv.Load(c.String("env-file"))
 	}
-
 	plugin := Plugin{
-		Host:  c.String("host"),
-		Token: c.String("token"),
-		Ref:   c.String("ref"),
-		ID:    c.String("id"),
-		Debug: c.Bool("debug"),
+		Host:        c.String("host"),
+		Token:       c.String("token"),
+		Ref:         c.String("ref"),
+		ID:          c.String("id"),
+		Debug:       c.Bool("debug"),
+		Wait:        c.Bool("wait"),
+		Environment: c.StringSlice("gitlab-env"),
 	}
 
 	return plugin.Exec()

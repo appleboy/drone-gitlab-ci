@@ -45,6 +45,33 @@ Example configuration using credentials from secrets:
       id: gitlab-project-id
 ```
 
+Example configuration with environment variables set on the gitlab pipeline:
+
+```diff
+  - name: trigger gitlab job
+    image: appleboy/drone-gitlab-ci
+    settings:
+      host: https://gitlab.com
+      token:
+        from_secret: gitlab_token
+      id: gitlab-project-id
++     gitlab-env:
++       - VARIABLE_NAME=VALUE
+```
+
+Example config where the job will wait on the gitlab pipeline completing:
+
+```diff
+  - name: trigger gitlab job
+    image: appleboy/drone-gitlab-ci
+    settings:
+      host: https://gitlab.com
+      token:
+        from_secret: gitlab_token
+      id: gitlab-project-id
++     wait: true
+```
+
 ## Parameter Reference
 
 host
@@ -61,3 +88,9 @@ id
 
 debug
 : enable debug mode
+
+gitlab-env
+: list of strings in the form `VARIABLE_NAME=VALUE` which will be passed to the pipeline.
+
+wait
+: bool - if true, will wait for pipeline to finish before reporting success or failure.

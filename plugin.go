@@ -2,75 +2,89 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"log"
-	"net/url"
+	"strings"
 	"time"
+
+	gitlab "github.com/xanzy/go-gitlab"
 )
 
 type (
 	// Plugin values.
 	Plugin struct {
-		Host  string
-		Token string
-		Ref   string
-		ID    string
-		Debug bool
-	}
-
-	// Commit struct
-	Commit struct {
-		ID         int         `json:"id"`
-		Sha        string      `json:"sha"`
-		Ref        string      `json:"ref"`
-		Status     string      `json:"status"`
-		BeforeSha  string      `json:"before_sha"`
-		Tag        bool        `json:"tag"`
-		YamlErrors interface{} `json:"yaml_errors"`
-		User       struct {
-			Name      string `json:"name"`
-			Username  string `json:"username"`
-			ID        int    `json:"id"`
-			State     string `json:"state"`
-			AvatarURL string `json:"avatar_url"`
-			WebURL    string `json:"web_url"`
-		} `json:"user"`
-		CreatedAt   time.Time   `json:"created_at"`
-		UpdatedAt   time.Time   `json:"updated_at"`
-		StartedAt   time.Time   `json:"started_at"`
-		FinishedAt  time.Time   `json:"finished_at"`
-		CommittedAt time.Time   `json:"committed_at"`
-		Duration    interface{} `json:"duration"`
-		Coverage    interface{} `json:"coverage"`
+		Host        string
+		Token       string
+		Ref         string
+		ID          string
+		Debug       bool
+		Environment []string
+		Wait        bool
 	}
 )
 
 // Exec executes the plugin.
 func (p Plugin) Exec() error {
 
-	if len(p.Host) == 0 || len(p.Token) == 0 || len(p.ID) == 0 {
-		return errors.New("missing gitlab-ci config")
+	if len(p.Host) == 0 {
+		return errors.New("missing host")
+	}
+	if len(p.Token) == 0 {
+		return errors.New("missing token")
+	}
+	if len(p.ID) == 0 {
+		return errors.New("missing project id")
 	}
 
-	ci := NewGitlab(p.Host, p.Debug)
-
-	params := url.Values{
-		"token": []string{p.Token},
-		"ref":   []string{p.Ref},
-	}
-
-	body := &Commit{}
-
-	err := ci.trigger(p.ID, params, body)
-
+	git := gitlab.NewClient(nil, p.Token)
+	err := git.SetBaseURL(fmt.Sprintf("%s/api/v4", p.Host))
 	if err != nil {
-		log.Println("gitlab-ci error:", err.Error())
+		log.Println("failed setting base url: ", err.Error())
 		return err
 	}
 
-	log.Println("build id:", body.ID)
-	log.Println("build sha:", body.Sha)
-	log.Println("build ref:", body.Ref)
-	log.Println("build status:", body.Status)
+	options := &gitlab.CreatePipelineOptions{
+		Ref:       &p.Ref,
+		Variables: make([]*gitlab.PipelineVariable, 0),
+	}
+	for _, variable := range p.Environment {
+		kvPair := strings.Split(variable, "=")
+		options.Variables = append(options.Variables, &gitlab.PipelineVariable{
+			Key:   kvPair[0],
+			Value: kvPair[1],
+		})
+	}
+	pipeline, _, err := git.Pipelines.CreatePipeline(p.ID, options)
+	if err != nil {
+		log.Println("gitlab-ci error: ", err.Error())
+		return err
+	}
 
+	log.Println("build id:", pipeline.ID)
+	log.Println("build sha:", pipeline.SHA)
+	log.Println("build ref:", pipeline.Ref)
+	log.Println("build status:", pipeline.Status)
+	log.Println("web url: ", pipeline.WebURL)
+
+	if p.Wait {
+		// sit and watch the pipeline finish
+		for {
+			pipeline, _, err = git.Pipelines.GetPipeline(p.ID, pipeline.ID)
+			if err != nil {
+				log.Println("gitlab-ci error: ", err.Error())
+				return err
+			}
+			switch pipeline.Status {
+			case "success":
+				return nil
+			case "failed", "canceled", "skipped":
+				return fmt.Errorf("gitlab-ci pipeline status: %s which is not a success, object: %#v", pipeline.Status, *pipeline)
+			case "pending", "running":
+				log.Printf("pipeline status: %s\n", pipeline.Status)
+				time.Sleep(30 * time.Second)
+			}
+
+		}
+	}
 	return nil
 }
