@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -37,7 +37,7 @@ func (g *Gitlab) parseResponse(resp *http.Response, body interface{}) (err error
 		return
 	}
 
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return
 	}
@@ -50,13 +50,12 @@ func (g *Gitlab) parseResponse(resp *http.Response, body interface{}) (err error
 	}
 
 	err = json.Unmarshal(data, body)
-
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	if g.Debug && body != nil {
+	if g.Debug {
 		fmt.Println()
 		fmt.Println("========= JSON Body ==========")
 		fmt.Printf("%+v\n", body)
