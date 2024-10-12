@@ -15,6 +15,6 @@ LABEL org.opencontainers.image.licenses=MIT
 RUN apk add --no-cache ca-certificates && \
   rm -rf /var/cache/apk/*
 
-COPY release/${TARGETOS}/${TARGETARCH}/drone-gitlba-ci /bin/
+COPY release/${TARGETOS}/${TARGETARCH}/drone-gitlab-ci /bin/
 
-ENTRYPOINT ["/bin/drone-gitlba-ci"]
+ENTRYPOINT ["/bin/drone-gitlab-ci"]
