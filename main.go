@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -64,6 +65,11 @@ func main() {
 			Usage:  "debug mode",
 			EnvVar: "PLUGIN_DEBUG,GITLAB_DEBUG,INPUT_DEBUG",
 		},
+		cli.StringSliceFlag{
+			Name:   "variables",
+			Usage:  "gitlab-ci variables",
+			EnvVar: "PLUGIN_VARIABLES,GITLAB_VARIABLES,INPUT_VARIABLES",
+		},
 	}
 
 	// Override a template
@@ -106,12 +112,22 @@ REPOSITORY:
 }
 
 func run(c *cli.Context) error {
+	variables := make(map[string]string)
+
+	for _, v := range c.StringSlice("variables") {
+		s := strings.Split(v, "=")
+		if len(s) == 2 {
+			variables[s[0]] = s[1]
+		}
+	}
+
 	plugin := Plugin{
-		Host:  c.String("host"),
-		Token: c.String("token"),
-		Ref:   c.String("ref"),
-		ID:    c.String("id"),
-		Debug: c.Bool("debug"),
+		Host:      c.String("host"),
+		Token:     c.String("token"),
+		Ref:       c.String("ref"),
+		ID:        c.String("id"),
+		Debug:     c.Bool("debug"),
+		Variables: variables,
 	}
 
 	return plugin.Exec()

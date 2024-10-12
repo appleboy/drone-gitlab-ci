@@ -10,11 +10,12 @@ import (
 type (
 	// Plugin values.
 	Plugin struct {
-		Host  string
-		Token string
-		Ref   string
-		ID    string
-		Debug bool
+		Host      string
+		Token     string
+		Ref       string
+		ID        string
+		Debug     bool
+		Variables map[string]string
 	}
 
 	// Commit struct
@@ -57,11 +58,14 @@ func (p Plugin) Exec() error {
 		"ref":   []string{p.Ref},
 	}
 
+	for key, value := range p.Variables {
+		params[key] = []string{value}
+	}
+
 	body := &Commit{}
 
 	err := ci.trigger(p.ID, params, body)
 	if err != nil {
-		log.Println("gitlab-ci error:", err.Error())
 		return err
 	}
 
