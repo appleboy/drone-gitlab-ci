@@ -57,7 +57,7 @@ func main() {
 			Name:   "ref,r",
 			Usage:  "gitlab-ci valid refs are only the branches and tags",
 			EnvVar: "PLUGIN_REF,GITLAB_REF,INPUT_REF",
-			Value:  "master",
+			Value:  "main",
 		},
 		cli.BoolFlag{
 			Name:   "debug,d",
