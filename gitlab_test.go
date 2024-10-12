@@ -9,7 +9,7 @@ import (
 
 func TestBuildURL(t *testing.T) {
 	ci := &Gitlab{
-		Host: "https://gitlab.com",
+		host: "https://gitlab.com",
 	}
 
 	assert.Equal(t, "https://gitlab.com/api/v4/projects/1234/trigger/pipeline", ci.buildURL("1234", nil))
@@ -17,7 +17,7 @@ func TestBuildURL(t *testing.T) {
 
 func TestHostNotFound(t *testing.T) {
 	ci := &Gitlab{
-		Host: "https://foo.bar",
+		host: "https://foo.bar",
 	}
 
 	params := url.Values{
@@ -31,7 +31,7 @@ func TestHostNotFound(t *testing.T) {
 
 func TestNilBody(t *testing.T) {
 	ci := &Gitlab{
-		Host: "https://gitlab.com",
+		host: "https://gitlab.com",
 	}
 
 	params := url.Values{
@@ -49,8 +49,8 @@ func TestResponse404Body(t *testing.T) {
 	}
 
 	ci := &Gitlab{
-		Host:  "https://gitlab.com",
-		Debug: true,
+		host:  "https://gitlab.com",
+		debug: true,
 	}
 
 	params := url.Values{
@@ -70,8 +70,8 @@ func TestTriggerMaster(t *testing.T) {
 	}
 
 	ci := &Gitlab{
-		Host:  "https://gitlab.com",
-		Debug: true,
+		host:  "https://gitlab.com",
+		debug: true,
 	}
 
 	params := url.Values{

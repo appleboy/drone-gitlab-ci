@@ -16,6 +16,7 @@ type (
 		ID        string
 		Debug     bool
 		Variables map[string]string
+		Insecure  bool
 	}
 
 	// Commit struct
@@ -51,7 +52,7 @@ func (p Plugin) Exec() error {
 		return errors.New("missing gitlab-ci config")
 	}
 
-	ci := NewGitlab(p.Host, p.Debug)
+	ci := NewGitlab(p.Host, p.Insecure, p.Debug)
 
 	params := url.Values{
 		"token": []string{p.Token},

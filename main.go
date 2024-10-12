@@ -70,6 +70,11 @@ func main() {
 			Usage:  "gitlab-ci variables",
 			EnvVar: "PLUGIN_VARIABLES,GITLAB_VARIABLES,INPUT_VARIABLES",
 		},
+		cli.BoolFlag{
+			Name:   "insecure",
+			Usage:  "allow connections to SSL sites without certs",
+			EnvVar: "PLUGIN_INSECURE,GITLAB_INSECURE,INPUT_INSECURE",
+		},
 	}
 
 	// Override a template
@@ -128,6 +133,7 @@ func run(c *cli.Context) error {
 		ID:        c.String("id"),
 		Debug:     c.Bool("debug"),
 		Variables: variables,
+		Insecure:  c.Bool("insecure"),
 	}
 
 	return plugin.Exec()

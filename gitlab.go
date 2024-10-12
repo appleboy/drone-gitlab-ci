@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -14,22 +15,34 @@ import (
 type (
 	// Gitlab contain Auth and BaseURL
 	Gitlab struct {
-		Host  string
-		Debug bool
+		host   string
+		debug  bool
+		client *http.Client
 	}
 )
 
 // NewGitlab is initial Gitlab object
-func NewGitlab(host string, debug bool) *Gitlab {
+func NewGitlab(host string, insecure, debug bool) *Gitlab {
 	url := strings.TrimRight(host, "/")
-	return &Gitlab{
-		Host:  url,
-		Debug: debug,
+	g := &Gitlab{
+		host:   url,
+		debug:  debug,
+		client: http.DefaultClient,
 	}
+
+	if insecure {
+		g.client = &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			},
+		}
+	}
+
+	return g
 }
 
 func (g *Gitlab) sendRequest(req *http.Request) (*http.Response, error) {
-	return http.DefaultClient.Do(req)
+	return g.client.Do(req)
 }
 
 func (g *Gitlab) parseResponse(resp *http.Response, body interface{}) (err error) {
@@ -44,7 +57,7 @@ func (g *Gitlab) parseResponse(resp *http.Response, body interface{}) (err error
 		return
 	}
 
-	if g.Debug {
+	if g.debug {
 		fmt.Println()
 		fmt.Println("========= Response Body =========")
 		fmt.Println(string(data))
@@ -57,7 +70,7 @@ func (g *Gitlab) parseResponse(resp *http.Response, body interface{}) (err error
 		return
 	}
 
-	if g.Debug {
+	if g.debug {
 		fmt.Println()
 		fmt.Println("========= JSON Body ==========")
 		fmt.Printf("%+v\n", body)
@@ -106,7 +119,7 @@ func (g *Gitlab) trigger(id string, params url.Values, body interface{}) (err er
 }
 
 func (g *Gitlab) buildURL(id string, params url.Values) string {
-	url := g.Host + "/api/v4/projects/" + id + "/trigger/pipeline"
+	url := g.host + "/api/v4/projects/" + id + "/trigger/pipeline"
 
 	if params != nil {
 		queryString := params.Encode()
