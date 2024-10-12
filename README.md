@@ -2,12 +2,10 @@
 
 ![logo](./images/logo.png)
 
+[![Lint and Testing](https://github.com/appleboy/drone-gitlab-ci/actions/workflows/lint.yml/badge.svg)](https://github.com/appleboy/drone-gitlab-ci/actions/workflows/lint.yml)
 [![GoDoc](https://godoc.org/github.com/appleboy/drone-gitlab-ci?status.svg)](https://godoc.org/github.com/appleboy/drone-gitlab-ci)
-[![Build Status](https://cloud.drone.io/api/badges/appleboy/drone-gitlab-ci/status.svg)](https://cloud.drone.io/appleboy/drone-gitlab-ci)
 [![codecov](https://codecov.io/gh/appleboy/drone-gitlab-ci/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-gitlab-ci)
 [![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-gitlab-ci)](https://goreportcard.com/report/github.com/appleboy/drone-gitlab-ci)
-[![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-gitlab-ci.svg)](https://hub.docker.com/r/appleboy/drone-gitlab-ci/)
-[![microbadger](https://images.microbadger.com/badges/image/appleboy/drone-gitlab-ci.svg)](https://microbadger.com/images/appleboy/drone-gitlab-ci "Get your own image badge on microbadger.com")
 
 [Drone](https://github.com/drone/drone) plugin for trigger [gitlab-ci](https://about.gitlab.com/gitlab-ci) jobs.
 
