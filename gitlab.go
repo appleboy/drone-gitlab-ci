@@ -78,6 +78,15 @@ func (g *Gitlab) trigger(id string, params url.Values, body interface{}) (err er
 	if err := w.WriteField("ref", params.Get("ref")); err != nil {
 		return err
 	}
+	// Remove token and ref from params
+	params.Del("token")
+	params.Del("ref")
+
+	for key := range params {
+		if err := w.WriteField(fmt.Sprintf("variables[%s]", key), params.Get(key)); err != nil {
+			return err
+		}
+	}
 	w.Close()
 
 	req, err := http.NewRequest("POST", requestURL, &b)
