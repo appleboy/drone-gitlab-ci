@@ -12,12 +12,7 @@ func TestBuildURL(t *testing.T) {
 		Host: "https://gitlab.com",
 	}
 
-	params := url.Values{
-		"token": []string{"foo"},
-		"ref":   []string{"bar"},
-	}
-
-	assert.Equal(t, "https://gitlab.com/api/v4/projects/1234/trigger/pipeline?ref=bar&token=foo", ci.buildURL("1234", params))
+	assert.Equal(t, "https://gitlab.com/api/v4/projects/1234/trigger/pipeline", ci.buildURL("1234", nil))
 }
 
 func TestHostNotFound(t *testing.T) {

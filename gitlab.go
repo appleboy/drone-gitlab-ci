@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"net/url"
 	"strings"
@@ -66,12 +68,24 @@ func (g *Gitlab) parseResponse(resp *http.Response, body interface{}) (err error
 }
 
 func (g *Gitlab) trigger(id string, params url.Values, body interface{}) (err error) {
-	requestURL := g.buildURL(id, params)
-	req, err := http.NewRequest("POST", requestURL, nil)
+	requestURL := g.buildURL(id, nil)
+
+	var b bytes.Buffer
+	w := multipart.NewWriter(&b)
+	if err := w.WriteField("token", params.Get("token")); err != nil {
+		return err
+	}
+	if err := w.WriteField("ref", params.Get("ref")); err != nil {
+		return err
+	}
+	w.Close()
+
+	req, err := http.NewRequest("POST", requestURL, &b)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+	req.Header.Set("Content-Type", w.FormDataContentType())
 
 	resp, err := g.sendRequest(req)
 	if err != nil {
