@@ -66,7 +66,6 @@ func (g *Gitlab) parseResponse(resp *http.Response, body interface{}) (err error
 
 	err = json.Unmarshal(data, body)
 	if err != nil {
-		fmt.Println(err)
 		return
 	}
 

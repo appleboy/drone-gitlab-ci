@@ -8,17 +8,13 @@ import (
 )
 
 func TestBuildURL(t *testing.T) {
-	ci := &Gitlab{
-		host: "https://gitlab.com",
-	}
+	ci := NewGitlab("https://gitlab.com", false, false)
 
 	assert.Equal(t, "https://gitlab.com/api/v4/projects/1234/trigger/pipeline", ci.buildURL("1234", nil))
 }
 
 func TestHostNotFound(t *testing.T) {
-	ci := &Gitlab{
-		host: "https://foo.bar",
-	}
+	ci := NewGitlab("https://foo.bar", false, false)
 
 	params := url.Values{
 		"token": []string{"foo"},
@@ -30,9 +26,7 @@ func TestHostNotFound(t *testing.T) {
 }
 
 func TestNilBody(t *testing.T) {
-	ci := &Gitlab{
-		host: "https://gitlab.com",
-	}
+	ci := NewGitlab("https://gitlab.com", false, false)
 
 	params := url.Values{
 		"token": []string{"foo"},
@@ -48,10 +42,7 @@ func TestResponse404Body(t *testing.T) {
 		Message string `json:"message"`
 	}
 
-	ci := &Gitlab{
-		host:  "https://gitlab.com",
-		debug: true,
-	}
+	ci := NewGitlab("https://gitlab.com", false, true)
 
 	params := url.Values{
 		"token": []string{"foo"},
@@ -69,10 +60,7 @@ func TestTriggerMaster(t *testing.T) {
 		Message string `json:"message"`
 	}
 
-	ci := &Gitlab{
-		host:  "https://gitlab.com",
-		debug: true,
-	}
+	ci := NewGitlab("https://gitlab.com", false, true)
 
 	params := url.Values{
 		"token": []string{"9184302d980918efad05bce8b97774"},
