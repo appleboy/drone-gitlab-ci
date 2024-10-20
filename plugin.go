@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"log/slog"
 	"os"
@@ -67,14 +68,19 @@ func (p Plugin) Exec() error {
 
 	// Wait for pipeline to complete
 	ticker := time.NewTicker(p.Interval)
+	ctxTimout, cancel := context.WithTimeout(context.Background(), p.Timeout)
+	defer cancel()
 	defer ticker.Stop()
 
 	l.Info("waiting for pipeline to complete", "timeout", p.Timeout)
 	for {
 		select {
-		case <-time.After(p.Timeout):
+		case <-ctxTimout.Done():
 			return errors.New("timeout waiting for pipeline to complete after " + p.Timeout.String())
 		case <-ticker.C:
+			if ctxTimout.Err() != nil {
+				return ctxTimout.Err()
+			}
 			// Check pipeline status
 			status, err := g.GetPipelineStatus(p.ProjectID, pipeline.ID)
 			if err != nil {
