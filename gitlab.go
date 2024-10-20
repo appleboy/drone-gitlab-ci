@@ -2,9 +2,7 @@ package main
 
 import (
 	"crypto/tls"
-	"log"
 	"net/http"
-	"strings"
 
 	"github.com/xanzy/go-gitlab"
 )
@@ -41,39 +39,22 @@ func NewGitlab(host, token string, insecure, debug bool) (*Gitlab, error) {
 	}, nil
 }
 
-func (g *Gitlab) CreatePipeline(projectID string, ref string, variables map[string]string) error {
+func (g *Gitlab) CreatePipeline(projectID string, ref string, variables map[string]string) (*gitlab.Pipeline, error) {
 	allenvs := make([]*gitlab.PipelineVariableOptions, 0)
 	options := &gitlab.CreatePipelineOptions{
 		Ref:       &ref,
 		Variables: &allenvs,
 	}
-	for _, variable := range variables {
-		kvPair := strings.Split(variable, "=")
-		if len(kvPair) != 2 {
-			log.Println("gitlab-ci error: invalid environment variable: ", variable)
-			continue
-		}
+	for k, v := range variables {
 		allenvs = append(allenvs, &gitlab.PipelineVariableOptions{
-			Key:   &kvPair[0],
-			Value: &kvPair[1],
+			Key:   &k,
+			Value: &v,
 		})
 	}
 	pipeline, _, err := g.client.Pipelines.CreatePipeline(projectID, options)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	log.Println("gitlab-ci: pipeline ID: ", pipeline.ID)
-	log.Println("gitlab-ci: Build SHA: ", pipeline.SHA)
-	log.Println("gitlab-ci: Build Ref: ", pipeline.Ref)
-	log.Println("gitlab-ci: Build Status: ", pipeline.Status)
-	log.Println("gitlab-ci: Build WebURL: ", pipeline.WebURL)
-	log.Println("gitlab-ci: Build CreatedAt: ", pipeline.CreatedAt)
-	log.Println("gitlab-ci: Build UpdatedAt: ", pipeline.UpdatedAt)
-	log.Println("gitlab-ci: Build StartedAt: ", pipeline.StartedAt)
-	log.Println("gitlab-ci: Build FinishedAt: ", pipeline.FinishedAt)
-	log.Println("gitlab-ci: Build CommittedAt: ", pipeline.CommittedAt)
-	log.Println("gitlab-ci: Build Duration: ", pipeline.Duration)
-
-	return nil
+	return pipeline, nil
 }

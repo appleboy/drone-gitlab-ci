@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"log"
 )
 
 type (
@@ -36,10 +37,18 @@ func (p Plugin) Exec() error {
 	}
 
 	// Create pipeline
-	err = g.CreatePipeline(p.ID, p.Ref, p.Variables)
+	pipeline, err := g.CreatePipeline(p.ID, p.Ref, p.Variables)
 	if err != nil {
 		return err
 	}
+
+	log.Println("gitlab-ci: pipeline ID: ", pipeline.ID)
+	log.Println("gitlab-ci: Build SHA: ", pipeline.SHA)
+	log.Println("gitlab-ci: Build Ref: ", pipeline.Ref)
+	log.Println("gitlab-ci: Build Status: ", pipeline.Status)
+	log.Println("gitlab-ci: Build WebURL: ", pipeline.WebURL)
+	log.Println("gitlab-ci: Build CreatedAt: ", pipeline.CreatedAt)
+	log.Println("gitlab-ci: Build UpdatedAt: ", pipeline.UpdatedAt)
 
 	return nil
 }
