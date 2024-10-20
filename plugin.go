@@ -18,6 +18,7 @@ type (
 		Insecure  bool
 		Timeout   time.Duration
 		Interval  time.Duration
+		Wait      bool
 	}
 )
 
@@ -52,6 +53,11 @@ func (p Plugin) Exec() error {
 	log.Println("gitlab-ci: Build WebURL: ", pipeline.WebURL)
 	log.Println("gitlab-ci: Build CreatedAt: ", pipeline.CreatedAt)
 	log.Println("gitlab-ci: Build UpdatedAt: ", pipeline.UpdatedAt)
+
+	// Wait for pipeline to complete
+	if !p.Wait {
+		return nil
+	}
 
 	// Wait for pipeline to complete
 	ticker := time.NewTicker(p.Interval)
