@@ -27,7 +27,7 @@ func main() {
 	copyright := fmt.Sprintf("Copyright (c) %v Bo-Yi Wu", time.Now().Year())
 	app := &cli.App{
 		Name:      "gitlab-ci plugin",
-		Usage:     "trigger gitlab-ci jobs",
+		Usage:     "trigger gitlab-ci pipeline",
 		Copyright: copyright,
 		Authors: []*cli.Author{
 			{
@@ -40,7 +40,6 @@ func main() {
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:    "host",
-				Aliases: []string{"l"},
 				Usage:   "gitlab-ci base url",
 				EnvVars: []string{"PLUGIN_HOST", "GITLAB_HOST", "INPUT_HOST"},
 				Value:   "https://gitlab.com",
@@ -52,8 +51,8 @@ func main() {
 				EnvVars: []string{"PLUGIN_TOKEN", "GITLAB_TOKEN", "INPUT_TOKEN"},
 			},
 			&cli.StringFlag{
-				Name:    "id",
-				Aliases: []string{"i"},
+				Name:    "project-id",
+				Aliases: []string{"p"},
 				Usage:   "gitlab-ci project id",
 				EnvVars: []string{"PLUGIN_ID", "GITLAB_PROJECT_ID", "INPUT_PROJECT_ID"},
 			},
@@ -77,6 +76,7 @@ func main() {
 			},
 			&cli.BoolFlag{
 				Name:    "insecure",
+				Aliases: []string{"k"},
 				Usage:   "allow connections to SSL sites without certs",
 				EnvVars: []string{"PLUGIN_INSECURE", "GITLAB_INSECURE", "INPUT_INSECURE"},
 			},
@@ -88,6 +88,7 @@ func main() {
 			},
 			&cli.DurationFlag{
 				Name:    "interval",
+				Aliases: []string{"i"},
 				Usage:   "interval waiting for pipeline to complete",
 				EnvVars: []string{"PLUGIN_INTERVAL", "GITLAB_INTERVAL", "INPUT_INTERVAL"},
 				Value:   time.Second * 5,
@@ -132,7 +133,7 @@ VERSION:
    {{.Version}}
    {{end}}
 REPOSITORY:
-    Github: https://github.com/appleboy/drone-line
+    Github: https://github.com/appleboy/drone-gitlab-ci
 `
 
 	if err := app.Run(os.Args); err != nil {
