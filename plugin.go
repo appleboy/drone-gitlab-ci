@@ -2,7 +2,8 @@ package main
 
 import (
 	"errors"
-	"log"
+	"log/slog"
+	"os"
 	"time"
 )
 
@@ -24,6 +25,9 @@ type (
 
 // Exec executes the plugin.
 func (p Plugin) Exec() error {
+	l := slog.New(slog.NewTextHandler(os.Stderr, nil)).
+		With("project_id", p.ProjectID)
+
 	if len(p.Host) == 0 {
 		return errors.New("missing host")
 	}
@@ -46,13 +50,15 @@ func (p Plugin) Exec() error {
 		return err
 	}
 
-	log.Println("gitlab-ci: Pipeline ID: ", pipeline.ProjectID)
-	log.Println("gitlab-ci: Build SHA: ", pipeline.SHA)
-	log.Println("gitlab-ci: Build Ref: ", pipeline.Ref)
-	log.Println("gitlab-ci: Build Status: ", pipeline.Status)
-	log.Println("gitlab-ci: Build WebURL: ", pipeline.WebURL)
-	log.Println("gitlab-ci: Build CreatedAt: ", pipeline.CreatedAt)
-	log.Println("gitlab-ci: Build UpdatedAt: ", pipeline.UpdatedAt)
+	l.Info(
+		"pipeline created",
+		"pipeline_id", pipeline.ID,
+		"pipeline_sha", pipeline.SHA,
+		"pipeline_ref", pipeline.Ref,
+		"pipeline_status", pipeline.Status,
+		"pipeline_web_url", pipeline.WebURL,
+		"pipeline_created_at", pipeline.CreatedAt,
+	)
 
 	// Wait for pipeline to complete
 	if !p.Wait {
@@ -63,7 +69,7 @@ func (p Plugin) Exec() error {
 	ticker := time.NewTicker(p.Interval)
 	defer ticker.Stop()
 
-	log.Println("gitlab-ci: Waiting for pipeline to complete...")
+	l.Info("waiting for pipeline to complete", "timeout", p.Timeout)
 	for {
 		select {
 		case <-time.After(p.Timeout):
@@ -75,8 +81,10 @@ func (p Plugin) Exec() error {
 				return err
 			}
 
-			log.Println("gitlab-ci: Current pipeline status:", status)
-			log.Println("gitlab-ci: Trigger by user:", pipeline.User.Name)
+			l.Info("pipeline status",
+				"status", status,
+				"triggered_by", pipeline.User.Name,
+			)
 
 			// https://docs.gitlab.com/ee/api/pipelines.html
 			// created, waiting_for_resource, preparing, pending,
@@ -85,7 +93,7 @@ func (p Plugin) Exec() error {
 				status == "failed" ||
 				status == "canceled" ||
 				status == "skipped" {
-				log.Println("gitlab-ci: Pipeline completed with status:", status)
+				l.Info("pipeline completed", "status", status)
 				return nil
 			}
 		}
