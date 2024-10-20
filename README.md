@@ -11,7 +11,13 @@
 
 ## GitLab Setting
 
-See the detail documentation for [Triggering pipelines through the API](https://docs.gitlab.com/ee/ci/triggers/). How to get the token from a new trigger? You can add a new trigger by going to your project’s `Settings ➔ CI/CD` under Triggers.
+See the detail documentation for [Pipeline trigger tokens API](https://docs.gitlab.com/ee/api/pipeline_triggers.html). You can create personal access tokens to authenticate with:
+
+1. The GitLab API.
+2. GitLab repositories.
+3. The GitLab registry.
+
+See the [GitLab token overview](https://docs.gitlab.com/ee/security/tokens/index.html#personal-access-tokens).
 
 ![token](./images/token.png)
 
