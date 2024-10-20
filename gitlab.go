@@ -1,131 +1,79 @@
 package main
 
 import (
-	"bytes"
 	"crypto/tls"
-	"encoding/json"
-	"fmt"
-	"io"
-	"mime/multipart"
+	"log"
 	"net/http"
-	"net/url"
 	"strings"
+
+	"github.com/xanzy/go-gitlab"
 )
 
 type (
 	// Gitlab contain Auth and BaseURL
 	Gitlab struct {
-		host   string
-		debug  bool
-		client *http.Client
+		client *gitlab.Client
 	}
 )
 
 // NewGitlab is initial Gitlab object
-func NewGitlab(host string, insecure, debug bool) *Gitlab {
-	url := strings.TrimRight(host, "/")
-	g := &Gitlab{
-		host:   url,
-		debug:  debug,
-		client: http.DefaultClient,
-	}
-
+func NewGitlab(host, token string, insecure, debug bool) (*Gitlab, error) {
+	httpClient := http.DefaultClient
 	if insecure {
-		g.client = &http.Client{
+		httpClient = &http.Client{
 			Transport: &http.Transport{
 				TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 			},
 		}
 	}
 
-	return g
+	g, err := gitlab.NewClient(
+		token,
+		gitlab.WithBaseURL(host),
+		gitlab.WithHTTPClient(httpClient),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Gitlab{
+		client: g,
+	}, nil
 }
 
-func (g *Gitlab) sendRequest(req *http.Request) (*http.Response, error) {
-	return g.client.Do(req)
-}
-
-func (g *Gitlab) parseResponse(resp *http.Response, body interface{}) (err error) {
-	defer resp.Body.Close()
-
-	if body == nil {
-		return
+func (g *Gitlab) CreatePipeline(projectID string, ref string, variables map[string]string) error {
+	allenvs := make([]*gitlab.PipelineVariableOptions, 0)
+	options := &gitlab.CreatePipelineOptions{
+		Ref:       &ref,
+		Variables: &allenvs,
 	}
-
-	data, err := io.ReadAll(resp.Body)
+	for _, variable := range variables {
+		kvPair := strings.Split(variable, "=")
+		if len(kvPair) != 2 {
+			log.Println("gitlab-ci error: invalid environment variable: ", variable)
+			continue
+		}
+		allenvs = append(allenvs, &gitlab.PipelineVariableOptions{
+			Key:   &kvPair[0],
+			Value: &kvPair[1],
+		})
+	}
+	pipeline, _, err := g.client.Pipelines.CreatePipeline(projectID, options)
 	if err != nil {
-		return
+		return err
 	}
 
-	if g.debug {
-		fmt.Println()
-		fmt.Println("========= Response Body =========")
-		fmt.Println(string(data))
-		fmt.Println("=================================")
-	}
-
-	err = json.Unmarshal(data, body)
-	if err != nil {
-		return
-	}
-
-	if g.debug {
-		fmt.Println()
-		fmt.Println("========= JSON Body ==========")
-		fmt.Printf("%+v\n", body)
-		fmt.Println("==============================")
-	}
+	log.Println("gitlab-ci: pipeline ID: ", pipeline.ID)
+	log.Println("gitlab-ci: Build SHA: ", pipeline.SHA)
+	log.Println("gitlab-ci: Build Ref: ", pipeline.Ref)
+	log.Println("gitlab-ci: Build Status: ", pipeline.Status)
+	log.Println("gitlab-ci: Build WebURL: ", pipeline.WebURL)
+	log.Println("gitlab-ci: Build CreatedAt: ", pipeline.CreatedAt)
+	log.Println("gitlab-ci: Build UpdatedAt: ", pipeline.UpdatedAt)
+	log.Println("gitlab-ci: Build StartedAt: ", pipeline.StartedAt)
+	log.Println("gitlab-ci: Build FinishedAt: ", pipeline.FinishedAt)
+	log.Println("gitlab-ci: Build CommittedAt: ", pipeline.CommittedAt)
+	log.Println("gitlab-ci: Build Duration: ", pipeline.Duration)
 
 	return nil
-}
-
-func (g *Gitlab) trigger(id string, params url.Values, body interface{}) (err error) {
-	requestURL := g.buildURL(id, nil)
-
-	var b bytes.Buffer
-	w := multipart.NewWriter(&b)
-	if err := w.WriteField("token", params.Get("token")); err != nil {
-		return err
-	}
-	if err := w.WriteField("ref", params.Get("ref")); err != nil {
-		return err
-	}
-	// Remove token and ref from params
-	params.Del("token")
-	params.Del("ref")
-
-	for key := range params {
-		if err := w.WriteField(fmt.Sprintf("variables[%s]", key), params.Get(key)); err != nil {
-			return err
-		}
-	}
-	w.Close()
-
-	req, err := http.NewRequest("POST", requestURL, &b)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	req.Header.Set("Content-Type", w.FormDataContentType())
-
-	resp, err := g.sendRequest(req)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	return g.parseResponse(resp, body)
-}
-
-func (g *Gitlab) buildURL(id string, params url.Values) string {
-	url := g.host + "/api/v4/projects/" + id + "/trigger/pipeline"
-
-	if params != nil {
-		queryString := params.Encode()
-		if queryString != "" {
-			url = url + "?" + queryString
-		}
-	}
-
-	return url
 }
