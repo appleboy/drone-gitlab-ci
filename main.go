@@ -86,6 +86,12 @@ func main() {
 				EnvVars: []string{"PLUGIN_TIMEOUT", "GITLAB_TIMEOUT", "INPUT_TIMEOUT"},
 				Value:   time.Minute * 60,
 			},
+			&cli.DurationFlag{
+				Name:    "interval",
+				Usage:   "interval waiting for pipeline to complete",
+				EnvVars: []string{"PLUGIN_INTERVAL", "GITLAB_INTERVAL", "INPUT_INTERVAL"},
+				Value:   time.Second * 5,
+			},
 		},
 	}
 
@@ -147,6 +153,7 @@ func run(c *cli.Context) error {
 		Variables: variables,
 		Insecure:  c.Bool("insecure"),
 		Timeout:   c.Duration("timeout"),
+		Interval:  c.Duration("interval"),
 	}
 
 	return plugin.Exec()

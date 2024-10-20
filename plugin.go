@@ -17,6 +17,7 @@ type (
 		Variables map[string]string
 		Insecure  bool
 		Timeout   time.Duration
+		Interval  time.Duration
 	}
 )
 
@@ -52,7 +53,8 @@ func (p Plugin) Exec() error {
 	log.Println("gitlab-ci: Build CreatedAt: ", pipeline.CreatedAt)
 	log.Println("gitlab-ci: Build UpdatedAt: ", pipeline.UpdatedAt)
 
-	ticker := time.NewTicker(5 * time.Second)
+	// Wait for pipeline to complete
+	ticker := time.NewTicker(p.Interval)
 	defer ticker.Stop()
 
 	log.Println("gitlab-ci: Waiting for pipeline to complete...")
@@ -67,10 +69,12 @@ func (p Plugin) Exec() error {
 				return err
 			}
 
-			log.Println("gitlab-ci: Current pipeline status: ", status)
+			log.Println("gitlab-ci: Current pipeline status:", status)
+			log.Println("gitlab-ci: Trigger by user:", pipeline.User.Name)
 
 			// https://docs.gitlab.com/ee/api/pipelines.html
-			// created, waiting_for_resource, preparing, pending, running, success, failed, canceled, skipped, manual, scheduled
+			// created, waiting_for_resource, preparing, pending,
+			// running, success, failed, canceled, skipped, manual, scheduled
 			if status == "success" ||
 				status == "failed" ||
 				status == "canceled" ||
