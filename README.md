@@ -19,7 +19,7 @@ See the detail documentation for [Pipeline trigger tokens API](https://docs.gitl
 
 See the [GitLab token overview](https://docs.gitlab.com/ee/security/tokens/index.html#personal-access-tokens).
 
-![token](./images/token.png)
+![token](./images/user_token.png)
 
 How to get the project ID? going to your project’s `Settings ➔ General` under Gerneral project.
 
