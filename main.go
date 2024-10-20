@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 // Version set at compile-time
@@ -25,61 +25,67 @@ func main() {
 	}
 
 	copyright := fmt.Sprintf("Copyright (c) %v Bo-Yi Wu", time.Now().Year())
-	app := cli.NewApp()
-	app.Name = "gitlab-ci plugin"
-	app.Usage = "trigger gitlab-ci jobs"
-	app.Copyright = copyright
-	app.Authors = []cli.Author{
-		{
-			Name:  "Bo-Yi Wu",
-			Email: "appleboy.tw@gmail.com",
+	app := &cli.App{
+		Name:      "gitlab-ci plugin",
+		Usage:     "trigger gitlab-ci jobs",
+		Copyright: copyright,
+		Authors: []*cli.Author{
+			{
+				Name:  "Bo-Yi Wu",
+				Email: "appleboy.tw@gmail.com",
+			},
 		},
-	}
-	app.Action = run
-	app.Version = Version
-	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:   "host,l",
-			Usage:  "gitlab-ci base url",
-			EnvVar: "PLUGIN_HOST,GITLAB_HOST,INPUT_HOST",
-			Value:  "https://gitlab.com",
-		},
-		cli.StringFlag{
-			Name:   "token,t",
-			Usage:  "gitlab-ci token",
-			EnvVar: "PLUGIN_TOKEN,GITLAB_TOKEN,INPUT_TOKEN",
-		},
-		cli.StringFlag{
-			Name:   "id,i",
-			Usage:  "gitlab-ci project id",
-			EnvVar: "PLUGIN_ID,GITLAB_PROJECT_ID,INPUT_PROJECT_ID",
-		},
-		cli.StringFlag{
-			Name:   "ref,r",
-			Usage:  "gitlab-ci valid refs are only the branches and tags",
-			EnvVar: "PLUGIN_REF,GITLAB_REF,INPUT_REF",
-			Value:  "main",
-		},
-		cli.BoolFlag{
-			Name:   "debug,d",
-			Usage:  "debug mode",
-			EnvVar: "PLUGIN_DEBUG,GITLAB_DEBUG,INPUT_DEBUG",
-		},
-		cli.StringSliceFlag{
-			Name:   "variables",
-			Usage:  "gitlab-ci variables",
-			EnvVar: "PLUGIN_VARIABLES,GITLAB_VARIABLES,INPUT_VARIABLES",
-		},
-		cli.BoolFlag{
-			Name:   "insecure",
-			Usage:  "allow connections to SSL sites without certs",
-			EnvVar: "PLUGIN_INSECURE,GITLAB_INSECURE,INPUT_INSECURE",
-		},
-		cli.DurationFlag{
-			Name:   "timeout",
-			Usage:  "timeout waiting for pipeline to complete",
-			EnvVar: "PLUGIN_TIMEOUT,GITLAB_TIMEOUT,INPUT_TIMEOUT",
-			Value:  time.Minute * 60,
+		Action:  run,
+		Version: Version,
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:    "host",
+				Aliases: []string{"l"},
+				Usage:   "gitlab-ci base url",
+				EnvVars: []string{"PLUGIN_HOST", "GITLAB_HOST", "INPUT_HOST"},
+				Value:   "https://gitlab.com",
+			},
+			&cli.StringFlag{
+				Name:    "token",
+				Aliases: []string{"t"},
+				Usage:   "gitlab-ci token",
+				EnvVars: []string{"PLUGIN_TOKEN", "GITLAB_TOKEN", "INPUT_TOKEN"},
+			},
+			&cli.StringFlag{
+				Name:    "id",
+				Aliases: []string{"i"},
+				Usage:   "gitlab-ci project id",
+				EnvVars: []string{"PLUGIN_ID", "GITLAB_PROJECT_ID", "INPUT_PROJECT_ID"},
+			},
+			&cli.StringFlag{
+				Name:    "ref",
+				Aliases: []string{"r"},
+				Usage:   "gitlab-ci valid refs are only the branches and tags",
+				EnvVars: []string{"PLUGIN_REF", "GITLAB_REF", "INPUT_REF"},
+				Value:   "main",
+			},
+			&cli.BoolFlag{
+				Name:    "debug",
+				Aliases: []string{"d"},
+				Usage:   "debug mode",
+				EnvVars: []string{"PLUGIN_DEBUG", "GITLAB_DEBUG", "INPUT_DEBUG"},
+			},
+			&cli.StringSliceFlag{
+				Name:    "variables",
+				Usage:   "gitlab-ci variables",
+				EnvVars: []string{"PLUGIN_VARIABLES", "GITLAB_VARIABLES", "INPUT_VARIABLES"},
+			},
+			&cli.BoolFlag{
+				Name:    "insecure",
+				Usage:   "allow connections to SSL sites without certs",
+				EnvVars: []string{"PLUGIN_INSECURE", "GITLAB_INSECURE", "INPUT_INSECURE"},
+			},
+			&cli.DurationFlag{
+				Name:    "timeout",
+				Usage:   "timeout waiting for pipeline to complete",
+				EnvVars: []string{"PLUGIN_TIMEOUT", "GITLAB_TIMEOUT", "INPUT_TIMEOUT"},
+				Value:   time.Minute * 60,
+			},
 		},
 	}
 
