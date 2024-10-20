@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"log"
+	"time"
 )
 
 type (
@@ -42,7 +43,7 @@ func (p Plugin) Exec() error {
 		return err
 	}
 
-	log.Println("gitlab-ci: pipeline ID: ", pipeline.ID)
+	log.Println("gitlab-ci: Pipeline ID: ", pipeline.ID)
 	log.Println("gitlab-ci: Build SHA: ", pipeline.SHA)
 	log.Println("gitlab-ci: Build Ref: ", pipeline.Ref)
 	log.Println("gitlab-ci: Build Status: ", pipeline.Status)
@@ -50,5 +51,32 @@ func (p Plugin) Exec() error {
 	log.Println("gitlab-ci: Build CreatedAt: ", pipeline.CreatedAt)
 	log.Println("gitlab-ci: Build UpdatedAt: ", pipeline.UpdatedAt)
 
-	return nil
+	ticker := time.NewTicker(5 * time.Second)
+	defer ticker.Stop()
+
+	log.Println("gitlab-ci: Waiting for pipeline to complete...")
+	for {
+		select {
+		case <-time.After(60 * time.Minute):
+			return errors.New("timeout waiting for pipeline to complete")
+		case <-ticker.C:
+			// Check pipeline status
+			status, err := g.GetPipelineStatus(p.ID, pipeline.ID)
+			if err != nil {
+				return err
+			}
+
+			log.Println("gitlab-ci: Current pipeline status: ", status)
+
+			// https://docs.gitlab.com/ee/api/pipelines.html
+			// created, waiting_for_resource, preparing, pending, running, success, failed, canceled, skipped, manual, scheduled
+			if status == "success" ||
+				status == "failed" ||
+				status == "canceled" ||
+				status == "skipped" {
+				log.Println("gitlab-ci: Pipeline completed with status:", status)
+				return nil
+			}
+		}
+	}
 }
