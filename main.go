@@ -75,6 +75,12 @@ func main() {
 			Usage:  "allow connections to SSL sites without certs",
 			EnvVar: "PLUGIN_INSECURE,GITLAB_INSECURE,INPUT_INSECURE",
 		},
+		cli.DurationFlag{
+			Name:   "timeout",
+			Usage:  "timeout waiting for pipeline to complete",
+			EnvVar: "PLUGIN_TIMEOUT,GITLAB_TIMEOUT,INPUT_TIMEOUT",
+			Value:  time.Minute * 60,
+		},
 	}
 
 	// Override a template
@@ -134,6 +140,7 @@ func run(c *cli.Context) error {
 		Debug:     c.Bool("debug"),
 		Variables: variables,
 		Insecure:  c.Bool("insecure"),
+		Timeout:   c.Duration("timeout"),
 	}
 
 	return plugin.Exec()

@@ -16,6 +16,7 @@ type (
 		Debug     bool
 		Variables map[string]string
 		Insecure  bool
+		Timeout   time.Duration
 	}
 )
 
@@ -57,8 +58,8 @@ func (p Plugin) Exec() error {
 	log.Println("gitlab-ci: Waiting for pipeline to complete...")
 	for {
 		select {
-		case <-time.After(60 * time.Minute):
-			return errors.New("timeout waiting for pipeline to complete")
+		case <-time.After(p.Timeout):
+			return errors.New("timeout waiting for pipeline to complete after " + p.Timeout.String())
 		case <-ticker.C:
 			// Check pipeline status
 			status, err := g.GetPipelineStatus(p.ID, pipeline.ID)
