@@ -12,7 +12,7 @@ type (
 		Host      string
 		Token     string
 		Ref       string
-		ID        string
+		ProjectID string
 		Debug     bool
 		Variables map[string]string
 		Insecure  bool
@@ -30,7 +30,7 @@ func (p Plugin) Exec() error {
 	if len(p.Token) == 0 {
 		return errors.New("missing token")
 	}
-	if len(p.ID) == 0 {
+	if len(p.ProjectID) == 0 {
 		return errors.New("missing project id")
 	}
 
@@ -41,12 +41,12 @@ func (p Plugin) Exec() error {
 	}
 
 	// Create pipeline
-	pipeline, err := g.CreatePipeline(p.ID, p.Ref, p.Variables)
+	pipeline, err := g.CreatePipeline(p.ProjectID, p.Ref, p.Variables)
 	if err != nil {
 		return err
 	}
 
-	log.Println("gitlab-ci: Pipeline ID: ", pipeline.ID)
+	log.Println("gitlab-ci: Pipeline ID: ", pipeline.ProjectID)
 	log.Println("gitlab-ci: Build SHA: ", pipeline.SHA)
 	log.Println("gitlab-ci: Build Ref: ", pipeline.Ref)
 	log.Println("gitlab-ci: Build Status: ", pipeline.Status)
@@ -70,7 +70,7 @@ func (p Plugin) Exec() error {
 			return errors.New("timeout waiting for pipeline to complete after " + p.Timeout.String())
 		case <-ticker.C:
 			// Check pipeline status
-			status, err := g.GetPipelineStatus(p.ID, pipeline.ID)
+			status, err := g.GetPipelineStatus(p.ProjectID, pipeline.ID)
 			if err != nil {
 				return err
 			}

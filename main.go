@@ -155,7 +155,7 @@ func run(c *cli.Context) error {
 		Host:      c.String("host"),
 		Token:     c.String("token"),
 		Ref:       c.String("ref"),
-		ID:        c.String("id"),
+		ProjectID: c.String("project-id"),
 		Debug:     c.Bool("debug"),
 		Variables: variables,
 		Insecure:  c.Bool("insecure"),

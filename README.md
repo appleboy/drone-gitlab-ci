@@ -36,21 +36,13 @@ The pre-compiled binaries can be downloaded from [release page](https://github.c
 With `Go` installed
 
 ```sh
-go get -u -v github.com/appleboy/drone-gitlab-ci
+go install github.com/appleboy/drone-gitlab-ci
 ```
 
 or build the binary with the following command:
 
 ```sh
 make build
-```
-
-## Docker
-
-Build the docker image with the following commands:
-
-```sh
-make docker
 ```
 
 ## Usage
@@ -66,7 +58,7 @@ drone-gitlab-ci \
   --host https://gitlab.com/ \
   --token XXXXXXXX \
   --ref master \
-  --id gitlab-ci-project-id
+  --project-id gitlab-ci-project-id
 ```
 
 Enable debug mode.
@@ -76,7 +68,7 @@ drone-gitlab-ci \
   --host https://gitlab.com/ \
   --token XXXXXXXX \
   --ref master \
-  --id gitlab-ci-project-id
+  --project-id gitlab-ci-project-id
 + --debug
 ```
 
