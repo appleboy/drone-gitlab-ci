@@ -1,3 +1,24 @@
+/*
+Package main provides functionality to interact with GitLab's API, specifically for creating and managing pipelines.
+
+The Gitlab struct contains an authenticated client to communicate with the GitLab API.
+
+Functions:
+
+- NewGitlab: Initializes a new Gitlab client with the provided host, token, and configuration options.
+- CreatePipeline: Triggers the creation of a new pipeline in a specified GitLab project.
+- GetPipelineStatus: Retrieves the status of a specific pipeline for a given project.
+
+Types:
+
+- Gitlab: Contains the authenticated client for GitLab API interactions.
+
+Dependencies:
+
+- "crypto/tls"
+- "net/http"
+- "github.com/xanzy/go-gitlab"
+*/
 package main
 
 import (
@@ -14,7 +35,7 @@ type (
 	}
 )
 
-// NewGitlab is initial Gitlab object
+// NewGitlab initializes a new Gitlab client with the provided host, token, and configuration options.
 func NewGitlab(host, token string, insecure, debug bool) (*Gitlab, error) {
 	httpClient := http.DefaultClient
 	if insecure {
@@ -69,6 +90,9 @@ func (g *Gitlab) CreatePipeline(projectID string, ref string, variables map[stri
 	return pipeline, nil
 }
 
+// GetPipelineStatus retrieves the status of a specific pipeline for a given project.
+// It takes the project ID as a string and the pipeline ID as an integer.
+// It returns the status of the pipeline as a string and an error if any occurs during the retrieval process.
 func (g *Gitlab) GetPipelineStatus(projectID string, pipelineID int) (string, error) {
 	pipeline, _, err := g.client.Pipelines.GetPipeline(projectID, pipelineID)
 	if err != nil {
