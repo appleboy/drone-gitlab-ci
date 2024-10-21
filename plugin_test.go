@@ -17,6 +17,7 @@ func TestMissingConfig(t *testing.T) {
 
 func TestSetOutput(t *testing.T) {
 	t.Run("GITHUB_OUTPUT not set", func(t *testing.T) {
+		os.Setenv("GITHUB_OUTPUT", "")
 		var plugin Plugin
 		err := plugin.SetOutput(map[string]string{"key": "value"})
 		assert.NotNil(t, err)
