@@ -57,6 +57,18 @@ func (p Plugin) Exec() error {
 		"pipeline_created_at", pipeline.CreatedAt,
 	)
 
+	// Set output
+	if p.IsGitHub {
+		if err := p.SetOutput(map[string]string{
+			"id":      fmt.Sprint(pipeline.ID),
+			"sha":     pipeline.SHA,
+			"ref":     pipeline.Ref,
+			"web_url": pipeline.WebURL,
+		}); err != nil {
+			return err
+		}
+	}
+
 	// Wait for pipeline to complete
 	if !p.Wait {
 		return nil
