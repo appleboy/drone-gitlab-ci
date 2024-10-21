@@ -108,6 +108,12 @@ func (p Plugin) Exec() error {
 				status == "canceled" ||
 				status == "skipped" {
 				l.Info("pipeline completed", "status", status)
+				if p.IsGitHub {
+					// update status
+					if err := p.SetOutput(map[string]string{"status": status}); err != nil {
+						return err
+					}
+				}
 				return nil
 			}
 		}
