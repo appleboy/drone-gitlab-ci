@@ -86,9 +86,6 @@ func (p Plugin) Exec() error {
 		case <-ctxTimout.Done():
 			return errors.New("timeout waiting for pipeline to complete after " + p.Timeout.String())
 		case <-ticker.C:
-			if ctxTimout.Err() != nil {
-				return ctxTimout.Err()
-			}
 			// Check pipeline status
 			status, err := g.GetPipelineStatus(p.ProjectID, pipeline.ID)
 			if err != nil {
@@ -115,6 +112,16 @@ func (p Plugin) Exec() error {
 					}
 				}
 				return nil
+			}
+
+			if ctxTimout.Err() != nil {
+				if p.IsGitHub {
+					// update status
+					if err := p.SetOutput(map[string]string{"status": status}); err != nil {
+						return err
+					}
+				}
+				return ctxTimout.Err()
 			}
 		}
 	}
