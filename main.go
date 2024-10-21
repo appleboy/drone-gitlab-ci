@@ -99,6 +99,11 @@ func main() {
 				Usage:   "wait for pipeline to complete",
 				EnvVars: []string{"PLUGIN_WAIT", "GITLAB_WAIT", "INPUT_WAIT"},
 			},
+			&cli.BoolFlag{
+				Name:    "github",
+				Usage:   "github actions",
+				EnvVars: []string{"PLUGIN_GITHUB", "GITHUB_ACTIONS", "INPUT_GITHUB"},
+			},
 		},
 	}
 
@@ -162,6 +167,7 @@ func run(c *cli.Context) error {
 		Timeout:   c.Duration("timeout"),
 		Interval:  c.Duration("interval"),
 		Wait:      c.Bool("wait"),
+		IsGitHub:  c.Bool("github"),
 	}
 
 	return plugin.Exec()

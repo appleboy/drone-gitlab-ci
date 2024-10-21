@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log/slog"
 	"os"
 	"time"
@@ -21,6 +22,7 @@ type (
 		Timeout   time.Duration
 		Interval  time.Duration
 		Wait      bool
+		IsGitHub  bool
 	}
 )
 
@@ -98,6 +100,28 @@ func (p Plugin) Exec() error {
 			}
 		}
 	}
+}
+
+func (p Plugin) SetOutput(data map[string]string) error {
+	githubOutput := os.Getenv("GITHUB_OUTPUT")
+	if githubOutput == "" {
+		return errors.New("GITHUB_OUTPUT is not set")
+	}
+
+	file, err := os.OpenFile(githubOutput, os.O_APPEND|os.O_WRONLY, 0o644)
+	if err != nil {
+		return fmt.Errorf("failed to open file %s: %w", githubOutput, err)
+	}
+	defer file.Close()
+
+	for k, v := range data {
+		_, err = fmt.Fprintf(file, "%s=%s", k, v)
+		if err != nil {
+			return fmt.Errorf("failed to write to file %s: %w", githubOutput, err)
+		}
+	}
+
+	return nil
 }
 
 // Validate checks the plugin configuration.
