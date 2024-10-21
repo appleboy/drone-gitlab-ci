@@ -37,7 +37,7 @@ func TestSetOutput(t *testing.T) {
 
 		content, err := os.ReadFile(tempFile.Name())
 		assert.Nil(t, err)
-		assert.Contains(t, string(content), "key=value")
+		assert.Contains(t, string(content), "key=value\n")
 	})
 
 	t.Run("GITHUB_OUTPUT set but file write fails", func(t *testing.T) {

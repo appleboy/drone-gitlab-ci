@@ -59,7 +59,6 @@ func (p Plugin) Exec() error {
 
 	// Set output
 	if p.IsGitHub {
-		l.Info("setting output")
 		if err := p.SetOutput(map[string]string{
 			"id":      fmt.Sprint(pipeline.ID),
 			"sha":     pipeline.SHA,
@@ -128,7 +127,7 @@ func (p Plugin) SetOutput(data map[string]string) error {
 	defer file.Close()
 
 	for k, v := range data {
-		_, err = fmt.Fprintf(file, "%s=%s", k, v)
+		_, err = fmt.Fprintf(file, "%s=%s\n", k, v)
 		if err != nil {
 			return fmt.Errorf("failed to write to file %s: %w", githubOutput, err)
 		}
