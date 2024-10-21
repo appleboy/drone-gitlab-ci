@@ -59,6 +59,7 @@ func (p Plugin) Exec() error {
 
 	// Set output
 	if p.IsGitHub {
+		l.Info("setting output")
 		if err := p.SetOutput(map[string]string{
 			"id":      fmt.Sprint(pipeline.ID),
 			"sha":     pipeline.SHA,
