@@ -29,14 +29,8 @@ func (p Plugin) Exec() error {
 	l := slog.New(slog.NewTextHandler(os.Stderr, nil)).
 		With("project_id", p.ProjectID)
 
-	if len(p.Host) == 0 {
-		return errors.New("missing host")
-	}
-	if len(p.Token) == 0 {
-		return errors.New("missing token")
-	}
-	if len(p.ProjectID) == 0 {
-		return errors.New("missing project id")
+	if err := p.Validate(); err != nil {
+		return err
 	}
 
 	// Create Gitlab object
@@ -104,4 +98,18 @@ func (p Plugin) Exec() error {
 			}
 		}
 	}
+}
+
+// Validate checks the plugin configuration.
+func (p Plugin) Validate() error {
+	if len(p.Host) == 0 {
+		return errors.New("missing host")
+	}
+	if len(p.Token) == 0 {
+		return errors.New("missing token")
+	}
+	if len(p.ProjectID) == 0 {
+		return errors.New("missing project id")
+	}
+	return nil
 }
