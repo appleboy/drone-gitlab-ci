@@ -7,6 +7,8 @@ import (
 	"log/slog"
 	"os"
 	"time"
+
+	gh "github.com/appleboy/com/gh"
 )
 
 type (
@@ -59,7 +61,7 @@ func (p Plugin) Exec() error {
 
 	// Set output
 	if p.IsGitHub {
-		if err := p.SetOutput(map[string]string{
+		if err := gh.SetOutput(map[string]string{
 			"id":      fmt.Sprint(pipeline.ID),
 			"sha":     pipeline.SHA,
 			"ref":     pipeline.Ref,
@@ -107,7 +109,7 @@ func (p Plugin) Exec() error {
 				l.Info("pipeline completed", "status", status)
 				if p.IsGitHub {
 					// update status
-					if err := p.SetOutput(map[string]string{"status": status}); err != nil {
+					if err := gh.SetOutput(map[string]string{"status": status}); err != nil {
 						return err
 					}
 				}
@@ -117,7 +119,7 @@ func (p Plugin) Exec() error {
 			if ctxTimout.Err() != nil {
 				if p.IsGitHub {
 					// update status
-					if err := p.SetOutput(map[string]string{"status": status}); err != nil {
+					if err := gh.SetOutput(map[string]string{"status": status}); err != nil {
 						return err
 					}
 				}
@@ -125,28 +127,6 @@ func (p Plugin) Exec() error {
 			}
 		}
 	}
-}
-
-func (p Plugin) SetOutput(data map[string]string) error {
-	githubOutput := os.Getenv("GITHUB_OUTPUT")
-	if githubOutput == "" {
-		return errors.New("GITHUB_OUTPUT is not set")
-	}
-
-	file, err := os.OpenFile(githubOutput, os.O_APPEND|os.O_WRONLY, 0o644)
-	if err != nil {
-		return fmt.Errorf("failed to open file %s: %w", githubOutput, err)
-	}
-	defer file.Close()
-
-	for k, v := range data {
-		_, err = fmt.Fprintf(file, "%s=%s\n", k, v)
-		if err != nil {
-			return fmt.Errorf("failed to write to file %s: %w", githubOutput, err)
-		}
-	}
-
-	return nil
 }
 
 // Validate checks the plugin configuration.

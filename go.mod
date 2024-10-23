@@ -3,6 +3,7 @@ module github.com/appleboy/drone-gitlab-ci
 go 1.21
 
 require (
+	github.com/appleboy/com v0.1.8
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.9.0
 	github.com/urfave/cli/v2 v2.27.5
