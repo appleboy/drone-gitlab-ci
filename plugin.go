@@ -78,14 +78,14 @@ func (p Plugin) Exec() error {
 
 	// Wait for pipeline to complete
 	ticker := time.NewTicker(p.Interval)
-	ctxTimout, cancel := context.WithTimeout(context.Background(), p.Timeout)
+	ctxTimeout, cancel := context.WithTimeout(context.Background(), p.Timeout)
 	defer cancel()
 	defer ticker.Stop()
 
 	l.Info("waiting for pipeline to complete", "timeout", p.Timeout)
 	for {
 		select {
-		case <-ctxTimout.Done():
+		case <-ctxTimeout.Done():
 			return errors.New("timeout waiting for pipeline to complete after " + p.Timeout.String())
 		case <-ticker.C:
 			// Check pipeline status
@@ -116,14 +116,14 @@ func (p Plugin) Exec() error {
 				return nil
 			}
 
-			if ctxTimout.Err() != nil {
+			if ctxTimeout.Err() != nil {
 				if p.IsGitHub {
 					// update status
 					if err := gh.SetOutput(map[string]string{"status": status}); err != nil {
 						return err
 					}
 				}
-				return ctxTimout.Err()
+				return ctxTimeout.Err()
 			}
 		}
 	}
