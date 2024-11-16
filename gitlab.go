@@ -41,7 +41,9 @@ func NewGitlab(host, token string, insecure, _ bool) (*Gitlab, error) {
 	if insecure {
 		httpClient = &http.Client{
 			Transport: &http.Transport{
-				TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+				TLSClientConfig: &tls.Config{
+					InsecureSkipVerify: true,
+				},
 			},
 		}
 	}
