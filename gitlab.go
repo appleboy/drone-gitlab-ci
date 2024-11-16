@@ -36,7 +36,7 @@ type (
 )
 
 // NewGitlab initializes a new Gitlab client with the provided host, token, and configuration options.
-func NewGitlab(host, token string, insecure, debug bool) (*Gitlab, error) {
+func NewGitlab(host, token string, insecure, _ bool) (*Gitlab, error) {
 	httpClient := http.DefaultClient
 	if insecure {
 		httpClient = &http.Client{
@@ -77,6 +77,7 @@ func (g *Gitlab) CreatePipeline(projectID string, ref string, variables map[stri
 		Variables: &allenvs,
 	}
 	for k, v := range variables {
+		k, v := k, v
 		allenvs = append(allenvs, &gitlab.PipelineVariableOptions{
 			Key:   &k,
 			Value: &v,

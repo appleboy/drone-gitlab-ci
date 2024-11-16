@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log/slog"
 	"os"
+	"strconv"
 	"time"
 
 	gh "github.com/appleboy/com/gh"
@@ -62,7 +62,7 @@ func (p Plugin) Exec() error {
 	// Set output
 	if p.IsGitHub {
 		if err := gh.SetOutput(map[string]string{
-			"id":      fmt.Sprint(pipeline.ID),
+			"id":      strconv.Itoa(pipeline.ID),
 			"sha":     pipeline.SHA,
 			"ref":     pipeline.Ref,
 			"web_url": pipeline.WebURL,

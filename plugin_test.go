@@ -11,5 +11,5 @@ func TestMissingConfig(t *testing.T) {
 
 	err := plugin.Exec()
 
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 }
