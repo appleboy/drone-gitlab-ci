@@ -7,7 +7,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.9.0
 	github.com/urfave/cli/v2 v2.27.5
-	github.com/xanzy/go-gitlab v0.113.0
+	github.com/xanzy/go-gitlab v0.114.0
 )
 
 require (
