@@ -25,6 +25,7 @@ import (
 	"crypto/tls"
 	"net/http"
 
+	"github.com/appleboy/com/convert"
 	"github.com/xanzy/go-gitlab"
 )
 
@@ -75,14 +76,15 @@ func NewGitlab(host, token string, insecure, _ bool) (*Gitlab, error) {
 func (g *Gitlab) CreatePipeline(projectID string, ref string, variables map[string]string) (*gitlab.Pipeline, error) {
 	allenvs := make([]*gitlab.PipelineVariableOptions, 0)
 	options := &gitlab.CreatePipelineOptions{
-		Ref:       &ref,
-		Variables: &allenvs,
+		Ref:       convert.ToPtr(ref),
+		Variables: convert.ToPtr(allenvs),
 	}
 	for k, v := range variables {
-		k, v := k, v
+		// Usage of single iteration variable in range loop
+		key, value := k, v
 		allenvs = append(allenvs, &gitlab.PipelineVariableOptions{
-			Key:   &k,
-			Value: &v,
+			Key:   convert.ToPtr(key),
+			Value: convert.ToPtr(value),
 		})
 	}
 	pipeline, _, err := g.client.Pipelines.CreatePipeline(projectID, options)
