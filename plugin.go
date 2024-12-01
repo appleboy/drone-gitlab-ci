@@ -38,7 +38,7 @@ func (p Plugin) Exec() error {
 	}
 
 	// Create Gitlab object
-	g, err := NewGitlab(p.Host, p.Token, p.Insecure, p.Debug)
+	g, err := NewGitlab(p.Host, p.Token, p.Insecure)
 	if err != nil {
 		return err
 	}

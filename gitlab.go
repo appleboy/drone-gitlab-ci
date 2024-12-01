@@ -37,7 +37,7 @@ type (
 )
 
 // NewGitlab initializes a new Gitlab client with the provided host, token, and configuration options.
-func NewGitlab(host, token string, insecure, _ bool) (*Gitlab, error) {
+func NewGitlab(host, token string, insecure bool) (*Gitlab, error) {
 	httpClient := http.DefaultClient
 	if insecure {
 		httpClient = &http.Client{
