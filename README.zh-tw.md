@@ -9,7 +9,7 @@
 [![codecov](https://codecov.io/gh/appleboy/drone-gitlab-ci/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-gitlab-ci)
 [![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-gitlab-ci)](https://goreportcard.com/report/github.com/appleboy/drone-gitlab-ci)
 
-[Drone](https://github.com/harness/harness) 插件用於觸發 [gitlab-ci](https://about.gitlab.com/solutions/continuous-integration/) 任務。
+[Drone](https://www.drone.io/) 插件用於觸發 [gitlab-ci](https://about.gitlab.com/solutions/continuous-integration/) 任務。
 
 ## GitLab 設定
 
