@@ -9,51 +9,51 @@
 [![codecov](https://codecov.io/gh/appleboy/drone-gitlab-ci/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-gitlab-ci)
 [![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-gitlab-ci)](https://goreportcard.com/report/github.com/appleboy/drone-gitlab-ci)
 
-[Drone](https://github.com/harness/harness) plugin for trigger [gitlab-ci](https://about.gitlab.com/solutions/continuous-integration/) jobs.
+[Drone](https://github.com/harness/harness) 插件用于触发 [gitlab-ci](https://about.gitlab.com/solutions/continuous-integration/) 任务。
 
-## GitLab Setting
+## GitLab 设置
 
-See the detail documentation for [Pipeline trigger tokens API](https://docs.gitlab.com/ee/api/pipeline_triggers.html). You can create personal access tokens to authenticate with:
+请参阅 [Pipeline trigger tokens API](https://docs.gitlab.com/ee/api/pipeline_triggers.html) 的详细文档。您可以创建个人访问令牌来进行身份验证：
 
-1. The GitLab API.
-2. GitLab repositories.
-3. The GitLab registry.
+1. GitLab API。
+2. GitLab 仓库。
+3. GitLab 注册表。
 
-See the [GitLab token overview](https://docs.gitlab.com/ee/security/tokens/index.html#personal-access-tokens).
+请参阅 [GitLab token 概述](https://docs.gitlab.com/ee/security/tokens/index.html#personal-access-tokens)。
 
 ![token](./images/user_token.png)
 
-How to get the project ID? going to your project’s `Settings ➔ General` under Gerneral project.
+如何获取项目 ID？前往您的项目 `设置 ➔ 一般` 下的一般项目。
 
 ![projectID](./images/projectID.png)
 
-## Build or Download a binary
+## 构建或下载二进制文件
 
-The pre-compiled binaries can be downloaded from [release page](https://github.com/appleboy/drone-gitlab-ci/releases). Support the following OS type.
+可以从 [发布页面](https://github.com/appleboy/drone-gitlab-ci/releases) 下载预编译的二进制文件。支持以下操作系统类型。
 
 - Windows amd64/386
 - Linux amd64/386
 - Darwin amd64/386
 
-With `Go` installed
+安装 `Go`
 
 ```sh
 go install github.com/appleboy/drone-gitlab-ci
 ```
 
-or build the binary with the following command:
+或者使用以下命令构建二进制文件：
 
 ```sh
 make build
 ```
 
-## Usage
+## 用法
 
-There are three ways to trigger gitlab-ci jobs.
+有三种方法可以触发 gitlab-ci 任务。
 
-### Usage from binary
+### 从二进制文件使用
 
-trigger job.
+触发任务。
 
 ```bash
 drone-gitlab-ci \
@@ -63,20 +63,20 @@ drone-gitlab-ci \
   --project-id gitlab-ci-project-id
 ```
 
-Enable debug mode.
+启用调试模式。
 
-```diff
+```bash
 drone-gitlab-ci \
   --host https://gitlab.com/ \
   --token XXXXXXXX \
   --ref master \
-  --project-id gitlab-ci-project-id
-+ --debug
+  --project-id gitlab-ci-project-id \
+  --debug
 ```
 
-### Usage from docker
+### 从 docker 使用
 
-trigger job.
+触发任务。
 
 ```bash
 docker run --rm \
@@ -87,7 +87,7 @@ docker run --rm \
   appleboy/drone-gitlab-ci
 ```
 
-Enable debug mode.
+启用调试模式。
 
 ```bash
 docker run --rm \
@@ -99,9 +99,9 @@ docker run --rm \
   appleboy/drone-gitlab-ci
 ```
 
-### Usage from drone ci
+### 从 drone ci 使用
 
-Execute from the working directory:
+从工作目录执行：
 
 ```sh
 docker run --rm \
@@ -115,11 +115,11 @@ docker run --rm \
   appleboy/drone-gitlab-ci
 ```
 
-You can get more [information](DOCS.md) about how to use scp plugin in drone.
+您可以在 [此处](DOCS.md) 获取有关如何在 drone 中使用 scp 插件的更多 [信息](DOCS.md)。
 
-## Testing
+## 测试
 
-Test the package with the following command:
+使用以下命令测试包：
 
 ```sh
 make test
