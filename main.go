@@ -9,6 +9,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/urfave/cli/v2"
+	"github.com/yassinebenaid/godump"
 )
 
 // Version set at compile-time
@@ -168,6 +169,10 @@ func run(c *cli.Context) error {
 		Interval:  c.Duration("interval"),
 		Wait:      c.Bool("wait"),
 		IsGitHub:  c.Bool("github"),
+	}
+
+	if plugin.Debug {
+		godump.Dump(plugin)
 	}
 
 	return plugin.Exec()
