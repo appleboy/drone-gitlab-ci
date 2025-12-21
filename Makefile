@@ -39,28 +39,52 @@ endif
 TAGS ?=
 LDFLAGS ?= -X 'main.Version=$(VERSION)'
 
-all: build
+.PHONY: all
+all: build ## Build the project (default target)
 
-test:
+.PHONY: test
+test: ## Run tests with coverage
 	@$(GO) test -v -cover -coverprofile coverage.txt ./... && echo "\n==>\033[32m Ok\033[m\n" || exit 1
 
-install: $(GOFILES)
+.PHONY: install
+install: $(GOFILES) ## Install the executable to GOPATH/bin
 	$(GO) install -v -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)'
 
-build: $(EXECUTABLE)
+.PHONY: build
+build: $(EXECUTABLE) ## Build the executable binary
 
 $(EXECUTABLE): $(GOFILES)
 	$(GO) build -v -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o bin/$@
 
-build_linux_amd64:
+.PHONY: build_linux_amd64
+build_linux_amd64: ## Build for Linux AMD64 architecture
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO) build -a -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o release/linux/amd64/$(DEPLOY_IMAGE)
 
-build_linux_arm64:
+.PHONY: build_linux_arm64
+build_linux_arm64: ## Build for Linux ARM64 architecture
 	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 $(GO) build -a -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o release/linux/arm64/$(DEPLOY_IMAGE)
 
-clean:
+.PHONY: clean
+clean: ## Clean build artifacts and coverage files
 	$(GO) clean -x -i ./...
 	rm -rf coverage.txt $(EXECUTABLE)
 
-version:
+.PHONY: version
+version: ## Print the current version
 	@echo $(VERSION)
+
+.PHONY: lint
+lint: ## Run golangci-lint
+	golangci-lint run -v
+
+.PHONY: fmt
+fmt: ## Format code with golangci-lint
+	golangci-lint fmt
+
+.PHONY: help
+help: ## Print this help message.
+	@echo "Usage: make [target]"
+	@echo ""
+	@echo "Targets:"
+	@echo ""
+	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
