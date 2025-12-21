@@ -73,7 +73,10 @@ func NewGitlab(host, token string, insecure bool) (*Gitlab, error) {
 // Returns:
 //   - *gitlab.Pipeline: The created pipeline object.
 //   - error: An error object if the pipeline creation fails, otherwise nil.
-func (g *Gitlab) CreatePipeline(projectID string, ref string, variables map[string]string) (*gitlab.Pipeline, error) {
+func (g *Gitlab) CreatePipeline(
+	projectID, ref string,
+	variables map[string]string,
+) (*gitlab.Pipeline, error) {
 	allenvs := make([]*gitlab.PipelineVariableOptions, 0)
 	options := &gitlab.CreatePipelineOptions{
 		Ref:       convert.ToPtr(ref),

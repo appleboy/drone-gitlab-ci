@@ -86,7 +86,9 @@ func (p Plugin) Exec() error {
 	for {
 		select {
 		case <-ctxTimeout.Done():
-			return errors.New("timeout waiting for pipeline to complete after " + p.Timeout.String())
+			return errors.New(
+				"timeout waiting for pipeline to complete after " + p.Timeout.String(),
+			)
 		case <-ticker.C:
 			// Check pipeline status
 			status, err := g.GetPipelineStatus(p.ProjectID, pipeline.ID)
