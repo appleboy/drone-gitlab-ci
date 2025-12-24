@@ -62,7 +62,7 @@ func (p Plugin) Exec() error {
 	// Set output
 	if p.IsGitHub {
 		if err := gh.SetOutput(map[string]string{
-			"id":      strconv.Itoa(pipeline.ID),
+			"id":      strconv.FormatInt(pipeline.ID, 10),
 			"sha":     pipeline.SHA,
 			"ref":     pipeline.Ref,
 			"web_url": pipeline.WebURL,

@@ -17,7 +17,7 @@ Dependencies:
 
 - "crypto/tls"
 - "net/http"
-- "github.com/xanzy/go-gitlab"
+- "gitlab.com/gitlab-org/api/client-go"
 */
 package main
 
@@ -26,7 +26,7 @@ import (
 	"net/http"
 
 	"github.com/appleboy/com/convert"
-	"github.com/xanzy/go-gitlab"
+	"gitlab.com/gitlab-org/api/client-go"
 )
 
 type (
@@ -99,9 +99,9 @@ func (g *Gitlab) CreatePipeline(
 }
 
 // GetPipelineStatus retrieves the status of a specific pipeline for a given project.
-// It takes the project ID as a string and the pipeline ID as an integer.
+// It takes the project ID as a string and the pipeline ID as an int64.
 // It returns the status of the pipeline as a string and an error if any occurs during the retrieval process.
-func (g *Gitlab) GetPipelineStatus(projectID string, pipelineID int) (string, error) {
+func (g *Gitlab) GetPipelineStatus(projectID string, pipelineID int64) (string, error) {
 	pipeline, _, err := g.client.Pipelines.GetPipeline(projectID, pipelineID)
 	if err != nil {
 		return "", err
