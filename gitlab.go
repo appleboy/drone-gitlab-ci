@@ -43,7 +43,7 @@ func NewGitlab(host, token string, insecure bool) (*Gitlab, error) {
 		httpClient = &http.Client{
 			Transport: &http.Transport{
 				TLSClientConfig: &tls.Config{
-					InsecureSkipVerify: true,
+					InsecureSkipVerify: true, // #nosec G402
 				},
 			},
 		}
