@@ -26,7 +26,7 @@ import (
 	"net/http"
 
 	"github.com/appleboy/com/convert"
-	"gitlab.com/gitlab-org/api/client-go"
+	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
 
 type (
