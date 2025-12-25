@@ -1,6 +1,6 @@
 # drone-gitlab-ci
 
-![logo](./images/logo.png)
+![logo](./images/gitlab-ci.png)
 
 [繁體中文](./README.zh-tw.md) | [简体中文](./README.zh-cn.md) | [English](./README.md)
 
