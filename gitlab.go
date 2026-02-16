@@ -1,31 +1,10 @@
-/*
-Package main provides functionality to interact with GitLab's API, specifically for creating and managing pipelines.
-
-The Gitlab struct contains an authenticated client to communicate with the GitLab API.
-
-Functions:
-
-- NewGitlab: Initializes a new Gitlab client with the provided host, token, and configuration options.
-- CreatePipeline: Triggers the creation of a new pipeline in a specified GitLab project.
-- GetPipelineStatus: Retrieves the status of a specific pipeline for a given project.
-
-Types:
-
-- Gitlab: Contains the authenticated client for GitLab API interactions.
-
-Dependencies:
-
-- "crypto/tls"
-- "net/http"
-- "gitlab.com/gitlab-org/api/client-go"
-*/
 package main
 
 import (
-	"crypto/tls"
-	"net/http"
+	"time"
 
 	"github.com/appleboy/com/convert"
+	"github.com/appleboy/go-httpclient"
 	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
 
@@ -38,15 +17,15 @@ type (
 
 // NewGitlab initializes a new Gitlab client with the provided host, token, and configuration options.
 func NewGitlab(host, token string, insecure bool) (*Gitlab, error) {
-	httpClient := http.DefaultClient
-	if insecure {
-		httpClient = &http.Client{
-			Transport: &http.Transport{
-				TLSClientConfig: &tls.Config{
-					InsecureSkipVerify: true, // #nosec G402
-				},
-			},
-		}
+	// Use go-httpclient with AuthModeNone since GitLab uses token-based authentication
+	httpClient, err := httpclient.NewAuthClient(
+		httpclient.AuthModeNone,
+		"",
+		httpclient.WithTimeout(30*time.Second),
+		httpclient.WithInsecureSkipVerify(insecure), // #nosec G402
+	)
+	if err != nil {
+		return nil, err
 	}
 
 	g, err := gitlab.NewClient(
