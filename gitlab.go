@@ -18,9 +18,7 @@ type (
 // NewGitlab initializes a new Gitlab client with the provided host, token, and configuration options.
 func NewGitlab(host, token string, insecure bool) (*Gitlab, error) {
 	// Use go-httpclient with AuthModeNone since GitLab uses token-based authentication
-	httpClient, err := httpclient.NewAuthClient(
-		httpclient.AuthModeNone,
-		"",
+	httpClient, err := httpclient.NewClient(
 		httpclient.WithTimeout(30*time.Second),
 		httpclient.WithInsecureSkipVerify(insecure), // #nosec G402
 	)
