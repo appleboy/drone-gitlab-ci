@@ -19,6 +19,6 @@ RUN adduser -D -u 1000 appuser
 
 COPY release/${TARGETOS}/${TARGETARCH}/drone-gitlab-ci /bin/
 
-USER appuser
+USER 1000:1000
 
 ENTRYPOINT ["/bin/drone-gitlab-ci"]
