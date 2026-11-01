@@ -3,7 +3,6 @@ package main
 import (
 	"time"
 
-	"github.com/appleboy/com/convert"
 	"github.com/appleboy/go-httpclient"
 	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
@@ -56,15 +55,15 @@ func (g *Gitlab) CreatePipeline(
 ) (*gitlab.Pipeline, error) {
 	allenvs := make([]*gitlab.PipelineVariableOptions, 0)
 	options := &gitlab.CreatePipelineOptions{
-		Ref:       convert.ToPtr(ref),
-		Variables: convert.ToPtr(allenvs),
+		Ref:       new(ref),
+		Variables: new(allenvs),
 	}
 	for k, v := range variables {
 		// Usage of single iteration variable in range loop
 		key, value := k, v
 		allenvs = append(allenvs, &gitlab.PipelineVariableOptions{
-			Key:   convert.ToPtr(key),
-			Value: convert.ToPtr(value),
+			Key:   new(key),
+			Value: new(value),
 		})
 	}
 	pipeline, _, err := g.client.Pipelines.CreatePipeline(projectID, options)
